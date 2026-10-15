@@ -24,14 +24,31 @@ export async function command<T>(
   signal?: AbortSignal,
 ): Promise<T> {
   const timeout = AbortSignal.timeout(15000);
-  const response = await fetch("/api/command/", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ command: name, args }),
-    signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
-    cache: "no-store",
-  });
-  const data = await response.json();
+  let response: Response;
+  try {
+    response = await fetch("/api/command/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ command: name, args }),
+      signal: signal ? AbortSignal.any([signal, timeout]) : timeout,
+      cache: "no-store",
+    });
+  } catch (cause) {
+    if (signal?.aborted) throw cause;
+    throw new CommandError(
+      "Chưa kết nối được. Kiểm tra mạng rồi thử lại.",
+      "NETWORK_UNAVAILABLE",
+    );
+  }
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    throw new CommandError(
+      "Máy chủ chưa phản hồi. Thử lại sau ít giây.",
+      "NETWORK_UNAVAILABLE",
+    );
+  }
   if (!response.ok)
     throw new CommandError(data.error || "Không thực hiện được.", data.code);
   return data;

@@ -5,7 +5,7 @@ export default defineConfig({
   expect: { timeout: 8000 },
   fullyParallel: false,
   workers: 1,
-  reporter: "list",
+  reporter: process.env.CI ? [["list"], ["html", { open: "never" }]] : "list",
   use: {
     baseURL: "http://127.0.0.1:3201",
     ...devices["Desktop Chrome"],

@@ -11,6 +11,147 @@ import { shuffledTiles } from "../src/features/play/puzzle";
 import type { GameView } from "../src/features/sessions/model";
 import type { Question } from "../src/features/questions/model";
 import QRCode from "qrcode";
+import { workshopQuestions } from "../src/content/workshop";
+test("a wrong BUZZ gives the next player a turn and awards hint-adjusted star points once", async ({
+  browser,
+  page,
+  context,
+}) => {
+  await auth(context);
+  const q = {
+    ...workshopQuestions[1],
+    id: crypto.randomUUID(),
+    difficulty: "medium",
+    points: 300,
+  };
+  await api(context.request, "bank_save", { p_question: q });
+  const s = await api<{ id: string; code: string }>(
+    context.request,
+    "session_create",
+    {
+      title: "Spoken scoring",
+      questionIds: [q.id],
+      starQuestionIds: [q.id],
+      capacity: 60,
+      hintPenalty: 50,
+    },
+  );
+  const aContext = await browser.newContext(),
+    bContext = await browser.newContext();
+  const a = await aContext.newPage(),
+    b = await bContext.newPage();
+  try {
+    await join(a, s.code, "First");
+    await join(b, s.code, "Next");
+    await page.goto(`/admin/sessions/${s.id}/`);
+    await page.getByRole("button", { name: "Bắt đầu", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Mở gợi ý 1 (−50)", exact: true })
+      .click();
+    await a
+      .getByRole("button", { name: "Ngôi sao hy vọng", exact: true })
+      .click();
+    await page.getByRole("button", { name: "Mở BUZZ", exact: true }).click();
+    await expect(
+      a.getByRole("button", { name: "BUZZ", exact: true }),
+    ).toBeEnabled();
+    await a.getByRole("button", { name: "BUZZ", exact: true }).click();
+    await expect(
+      page.getByRole("button", { name: "Xem đáp án", exact: true }),
+    ).toBeDisabled();
+    await page.getByRole("button", { name: "Sai", exact: true }).click();
+    await expect(
+      a.getByText("Chưa đúng · 0 điểm. Chờ câu tiếp theo.", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      a.getByRole("button", { name: "BUZZ", exact: true }),
+    ).toHaveCount(0);
+    await expect(
+      a.getByText("Đã dùng ngôi sao trong phiên này", { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText("Còn 1 lượt · BUZZ chưa mở", { exact: true }),
+    ).toBeVisible();
+    await b
+      .getByRole("button", { name: "Ngôi sao hy vọng", exact: true })
+      .click();
+    await page.getByRole("button", { name: "Mở BUZZ", exact: true }).click();
+    await expect(
+      b.getByRole("button", { name: "BUZZ", exact: true }),
+    ).toBeEnabled();
+    await b.getByRole("button", { name: "BUZZ", exact: true }).click();
+    await page
+      .getByRole("button", { name: "Đúng · +500", exact: true })
+      .click();
+    await expect(b.getByText("+500 điểm", { exact: true })).toBeVisible();
+    await expect(
+      a.getByText("Chưa đúng · 0 điểm", { exact: true }),
+    ).toBeVisible();
+    await page.getByRole("button", { name: "Bảng điểm", exact: true }).click();
+    await page.getByRole("button", { name: "Kết thúc", exact: true }).click();
+    const g = await api(context.request, "session_view", { p_id: s.id });
+    expect(g.standings.map((p) => [p.name, p.score])).toEqual([
+      ["Next", 500],
+      ["First", 0],
+    ]);
+  } finally {
+    await Promise.all([aContext.close(), bContext.close()]);
+  }
+});
+
+test("joining survives a lost response and blocked local storage without creating a duplicate player", async ({
+  browser,
+  context,
+}) => {
+  await auth(context);
+  const s = await room(context.request, ["place"]);
+  const playerContext = await browser.newContext();
+  try {
+    await playerContext.addInitScript(() =>
+      Object.defineProperty(window, "localStorage", {
+        get() {
+          throw new DOMException("Storage blocked", "SecurityError");
+        },
+      }),
+    );
+    let loseResponse = true;
+    await playerContext.route("**/api/command/", async (route) => {
+      if (
+        loseResponse &&
+        route.request().postDataJSON().command === "session_join"
+      ) {
+        loseResponse = false;
+        const response = await route.fetch();
+        expect(response.ok()).toBe(true);
+        await route.abort("failed");
+      } else await route.continue();
+    });
+    const player = await playerContext.newPage();
+    await player.goto(`/?code=${s.code}`);
+    await player.getByLabel("Tên của bạn").fill("Retry");
+    await player.getByRole("button", { name: "Vào chơi", exact: true }).click();
+    await expect(player.locator(".notice.error")).toContainText(
+      "Chưa kết nối được",
+    );
+    expect(
+      (await api(context.request, "session_view", { p_id: s.id })).count,
+    ).toBe(1);
+    await player.getByRole("button", { name: "Vào chơi", exact: true }).click();
+    await expect(
+      player.getByText("Chờ MC bắt đầu…", { exact: true }),
+    ).toBeVisible();
+    await player.reload();
+    await expect(
+      player.getByText("Chờ MC bắt đầu…", { exact: true }),
+    ).toBeVisible();
+    const g = await api(context.request, "session_view", { p_id: s.id });
+    expect(g.count).toBe(1);
+    await expect(player.locator(".player-footer strong")).toHaveText("Retry");
+  } finally {
+    await playerContext.close();
+  }
+});
+
 test("spoken answer with three optional hints", async ({
   browser,
   page,
@@ -354,10 +495,23 @@ test("tied finalists use reserve BUZZ questions to settle the prize podium", asy
     await expect(
       c.getByRole("button", { name: "BUZZ", exact: true }),
     ).toBeEnabled();
-    await Promise.all([
-      b.getByRole("button", { name: "BUZZ", exact: true }).click(),
-      c.getByRole("button", { name: "BUZZ", exact: true }).click(),
-    ]);
+    // BUZZ is accepted on pointer-down. A winner immediately replaces both
+    // buttons, so locator.click() can wait forever trying to finish pointer-up.
+    const bells = await Promise.all(
+      [b, c].map((p) =>
+        p.getByRole("button", { name: "BUZZ", exact: true }).boundingBox(),
+      ),
+    );
+    await Promise.all(
+      [b, c].map((p, i) =>
+        p.mouse.move(
+          bells[i]!.x + bells[i]!.width / 2,
+          bells[i]!.y + bells[i]!.height / 2,
+        ),
+      ),
+    );
+    await Promise.all([b.mouse.down(), c.mouse.down()]);
+    await Promise.all([b.mouse.up(), c.mouse.up()]);
     await expect(page.locator(".buzz-winner strong")).toBeVisible();
     const winner = await page.locator(".buzz-winner strong").innerText();
     const loser = winner === "B" ? c : b,

@@ -33,7 +33,7 @@ Trang tham gia có **Quét QR**: mở camera trên HTTPS/localhost hoặc chọn
 | Trắc nghiệm | Mặc định bấm chuông, trả lời trực tiếp; tùy chọn chọn đáp án trên điện thoại | MC chấm khi dùng chuông; server tự chấm chế độ chọn |
 | Ghép ảnh | Chọn hai mảnh để đổi chỗ, gửi kết quả | Server kiểm tra thứ tự mảnh khi MC công bố |
 
-Sau đáp án: **Bảng điểm → Câu tiếp theo**. Điểm thuộc từng cá nhân, được lưu trong database; tải lại trang giữ tên, câu trả lời và điểm. BUZZ sai có thể mở lại cho người khác. Mỗi người chỉ được chấm một lần mỗi câu, retry không cộng điểm thêm.
+Sau đáp án: **Bảng điểm → Câu tiếp theo**. Điểm thuộc từng cá nhân, được lưu trong database; tải lại trang giữ tên, câu trả lời và điểm. MC phải chấm người giành quyền trả lời trước khi mở đáp án. Chấm **Sai**: người chơi thấy 0 điểm ngay; MC mở lại BUZZ cho những người chưa trả lời. Khi mọi người đều sai, mở đáp án rồi tiếp tục. Mỗi người chỉ được chấm một lần mỗi câu, retry không cộng điểm thêm.
 
 Phiên mới dùng thang điểm **Dễ 200 · Vừa 300 · Khó 400**, sai 0. Tác giả có thể cho phép **ngôi sao hy vọng** ở từng câu trong bộ/phiên: mỗi người một sao mỗi phiên, chọn trước khi trả lời, đúng ×2 và sai 0. Chỉ khi gửi bài hoặc được MC chấm thì sao mới bị dùng; chưa giành được quyền nói thì vẫn giữ sao. Ngôi sao và trạng thái đã dùng được lưu trên server.
 

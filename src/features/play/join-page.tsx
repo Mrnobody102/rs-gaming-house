@@ -1,12 +1,16 @@
 "use client";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowRight, ScanLine } from "lucide-react";
 import { QrScanner } from "./qr-scanner";
 import { randomToken } from "@/shared/client/random";
 import { Brand } from "@/components/brand";
 import { APP_NAME } from "@/shared/brand";
+import {
+  readPlayerSession,
+  savePlayerSession,
+} from "@/shared/client/player-session";
 import { command } from "@/shared/client/api";
 import { ErrorMessage } from "@/shared/ui/status";
 export function JoinPage() {
@@ -15,6 +19,7 @@ export function JoinPage() {
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
   const [scanning, setScanning] = useState(false);
+  const pending = useRef(false);
   const router = useRouter();
   useEffect(() => {
     setCode(
@@ -23,29 +28,32 @@ export function JoinPage() {
         ?.toUpperCase()
         .slice(0, 6) || "",
     );
-    try {
-      setName(localStorage.getItem("earthplay.name") || "");
-    } catch {}
+    setName(readPlayerSession("earthplay.name"));
   }, []);
   async function join(e: React.FormEvent) {
     e.preventDefault();
+    if (pending.current) return;
+    pending.current = true;
     setBusy(true);
     setError("");
     try {
-      const saved = localStorage.getItem(`earthplay.room:${code}`),
+      const saved = readPlayerSession(`earthplay.room:${code}`),
         token = saved || randomToken();
+      // Persist before the request: a lost response must retry with the same token.
+      savePlayerSession(`earthplay.room:${code}`, token);
       const s = await command<{ id: string }>("session_join", {
         p_code: code,
         p_name: name,
         p_token: token,
       });
-      localStorage.setItem(`earthplay.room:${code}`, token);
-      localStorage.setItem(`earthplay.player:${s.id}`, token);
-      localStorage.setItem("earthplay.name", name.trim());
+      savePlayerSession(`earthplay.player:${s.id}`, token);
+      savePlayerSession("earthplay.name", name.trim());
       router.push(`/play/${s.id}/`);
     } catch (e) {
       setError((e as Error).message);
       setBusy(false);
+    } finally {
+      pending.current = false;
     }
   }
   return (

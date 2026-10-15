@@ -24,6 +24,7 @@ import { useGame } from "./use-game";
 import { Puzzle } from "./puzzle";
 import { EarthStage } from "./earth-games";
 import { usesBuzz } from "@/features/games/catalog";
+import { readPlayerSession } from "@/shared/client/player-session";
 import { Ranking } from "./ranking";
 import { SessionContents } from "@/features/sessions/session-contents";
 import { GameHints } from "./game-hints";
@@ -49,7 +50,7 @@ export function GameScreen({
     }
     try {
       setToken(
-        accessToken || localStorage.getItem(`earthplay.player:${id}`) || "",
+        accessToken || readPlayerSession(`earthplay.player:${id}`) || "",
       );
     } catch {
       setToken(accessToken);
@@ -98,10 +99,20 @@ function LiveGame({
     [base, setBase] = useState(joinBase);
   const updateTiles = useCallback((value: number[]) => setTiles(value), []);
   const actionPending = useRef(false);
+  const networkActionError = useRef(false);
   const [needsReload, setNeedsReload] = useState(false);
   const [showControls, setShowControls] = useState(true);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const screenRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setActionError("");
+  }, [g?.roundId, g?.buzzId, g?.phase]);
+  useEffect(() => {
+    if (networkActionError.current) {
+      setActionError("");
+      networkActionError.current = false;
+    }
+  }, [g?.serverTime]);
   useEffect(() => {
     const update = () =>
       setIsFullscreen(document.fullscreenElement === screenRef.current);
@@ -128,6 +139,8 @@ function LiveGame({
       receive(await command<GameView>(name, { p_id: id, ...args }));
     } catch (e) {
       setActionError((e as Error).message);
+      networkActionError.current =
+        e instanceof CommandError && e.code === "NETWORK_UNAVAILABLE";
       if (e instanceof CommandError && e.code === "BUZZ_CLIENT_OUTDATED")
         setNeedsReload(true);
     } finally {
@@ -180,6 +193,8 @@ function LiveGame({
     scoreboard = g.phase === "leaderboard" || g.phase === "finished",
     eo = usesBuzz(q);
   const canControl = (host || projector) && g.host;
+  const pendingGrade = !!g.buzzWinner && !g.buzzWinner.graded;
+  const noBuzzRemaining = g.count > 0 && g.buzzRemaining === 0;
   const seconds = g.deadline
     ? Math.max(0, Math.ceil((Date.parse(g.deadline) - now - offset) / 1000))
     : q.seconds;
@@ -205,7 +220,11 @@ function LiveGame({
     me = g.standings.find((p) => p.id === g.myId);
   const buzzPanel = eo && !reveal && (
     <div className="buzz-area">
-      {g.buzzWinner ? (
+      {canAnswer && g.myAnswer ? (
+        <p className="feedback incorrect">
+          Chưa đúng · 0 điểm. Chờ câu tiếp theo.
+        </p>
+      ) : g.buzzWinner ? (
         <p className="buzz-winner">
           <strong>{g.buzzWinner.name}</strong> giành quyền trả lời
           {g.buzzWinner.elapsedMs != null && (
@@ -234,7 +253,15 @@ function LiveGame({
         </button>
       ) : (
         <p className="waiting-label">
-          {g.buzzOpen ? "BUZZ đang mở" : "BUZZ chưa mở"}
+          {!host && !projector && g.tiebreak?.active && !g.tiebreak.myEligible
+            ? "Chờ nhóm đồng điểm phân hạng."
+            : noBuzzRemaining
+              ? "Mọi người đã trả lời · Xem đáp án"
+              : g.buzzOpen
+                ? "BUZZ đang mở"
+                : g.answered > 0
+                  ? `Còn ${g.buzzRemaining} lượt · BUZZ chưa mở`
+                  : "BUZZ chưa mở"}
         </p>
       )}
       {canAnswer && g.buzzWinner?.id === g.myId && (
@@ -447,10 +474,10 @@ function LiveGame({
                 <b>×2</b>
               </button>
               <small>
-                {g.star?.selected
-                  ? `Đúng +${q.points * 2} · sai 0`
-                  : g.star?.used
-                    ? "Mỗi người 1 sao mỗi phiên"
+                {g.star?.used
+                  ? "Đã dùng ngôi sao trong phiên này"
+                  : g.star?.selected
+                    ? `Đúng +${q.points * 2} · sai 0`
                     : "Chọn trước khi trả lời · chỉ dùng khi được chấm"}
               </small>
             </div>
@@ -537,7 +564,7 @@ function LiveGame({
             (!canControl || (projector && !showControls)) &&
             buzzPanel}
           {q.hints?.length > 0 && <GameHints hints={q.hints} />}
-          {canAnswer && g.myAnswer && (
+          {canAnswer && g.myAnswer && (!eo || reveal) && (
             <p
               className={`feedback ${reveal ? (g.myAnswer.correct ? "correct" : "incorrect") : "submitted"}`}
             >
@@ -549,7 +576,7 @@ function LiveGame({
                     `+${g.myAnswer.points} điểm`
                   )
                 ) : (
-                  "Chưa đúng"
+                  "Chưa đúng · 0 điểm"
                 )
               ) : (
                 <>
@@ -642,7 +669,7 @@ function LiveGame({
                   ) : (
                     <button
                       className="button secondary"
-                      disabled={busy}
+                      disabled={busy || (!g.buzzOpen && noBuzzRemaining)}
                       onClick={() =>
                         run("buzz_control", {
                           p_round_id: g.roundId,
@@ -655,7 +682,12 @@ function LiveGame({
                   ))}
                 <button
                   className="button primary"
-                  disabled={busy}
+                  disabled={busy || (eo && pendingGrade)}
+                  title={
+                    eo && pendingGrade
+                      ? "Chấm đúng hoặc sai trước khi mở đáp án"
+                      : undefined
+                  }
                   onClick={() => control("reveal")}
                 >
                   <Eye size={17} /> Xem đáp án

@@ -35,10 +35,15 @@ export type GameView = {
   answered: number;
   standings: Standing[];
   myId: string | null;
-  myAnswer: { payload: Answer; correct?: boolean; points?: number } | null;
+  myAnswer: {
+    payload: Answer | { buzz: true };
+    correct?: boolean;
+    points?: number;
+  } | null;
   host: boolean;
   syncTopic: string;
   buzzOpen: boolean;
+  buzzRemaining: number;
   buzzId: string | null;
   buzzWinner: {
     id: string;
