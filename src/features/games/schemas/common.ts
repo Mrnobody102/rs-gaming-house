@@ -10,6 +10,7 @@ export const common = {
     .min(3, "Nhập câu hỏi ít nhất 3 ký tự.")
     .max(220, "Câu hỏi tối đa 220 ký tự."),
   image: media.default(""),
+  answerImage: media.optional(),
   seconds: z
     .number()
     .int()

@@ -58,16 +58,14 @@ test("production first run lets the owner set a password, create a room, then lo
   await page
     .getByRole("combobox", { name: "Số câu mỗi trang" })
     .selectOption("50");
-  await expect(page.locator(".question-row")).toHaveCount(23);
+  await expect(page.locator(".question-row")).toHaveCount(12);
   await page
     .getByRole("navigation", { name: "Câu hỏi theo game" })
-    .getByRole("link", { name: /Giải mã biến động/ })
+    .getByRole("link", { name: /Truy tìm tọa độ/ })
     .click();
   await page.getByRole("combobox", { name: "Lọc độ khó" }).selectOption("hard");
   await expect(page.locator(".question-row")).toHaveCount(1);
-  await expect(page.locator(".question-row")).toContainText(
-    "Phân biệt mở rộng cảng",
-  );
+  await expect(page.locator(".question-row")).toContainText("năm 2018");
   await page.screenshot({
     path: "artifacts/library-difficulty.png",
     fullPage: true,

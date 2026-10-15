@@ -94,6 +94,7 @@ test("admin pages keep sets discoverable, forms complete and controls readable a
   };
   const setId = crypto.randomUUID();
   for (const [command, args] of [
+    ["bank_save", { p_question: samples[1] }],
     ["bank_save", { p_question: archived }],
     [
       "set_save",

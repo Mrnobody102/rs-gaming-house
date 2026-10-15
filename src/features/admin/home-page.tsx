@@ -30,12 +30,7 @@ export function AdminHome() {
     setBusy(true);
     setError("");
     try {
-      const ids = ["riddle", "place", "locate", "change"].flatMap((kind) => {
-        const q =
-          questions.find((q) => q.kind === kind && q.difficulty === "easy") ||
-          questions.find((q) => q.kind === kind);
-        return q ? [q.id] : [];
-      });
+      const ids = questions.slice(0, 4).map((q) => q.id);
       const room = await command<{ id: string }>("session_create", {
         title: "Vòng khởi động",
         capacity: 60,

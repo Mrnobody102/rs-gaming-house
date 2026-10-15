@@ -16,6 +16,7 @@ const casts: Record<string, string> = {
   p_buzz_id: "uuid",
   p_participant_id: "uuid",
   p_capacity: "integer",
+  p_hint_penalty: "integer",
   p_open: "boolean",
   p_correct: "boolean",
   p_lng: "double precision",

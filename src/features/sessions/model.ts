@@ -57,11 +57,14 @@ export type GameView = {
     reserves: number;
   };
   hintCount: number;
+  hintPenalty: 0 | 50;
+  basePoints: number;
   hintTotal: number;
   guess: { lng: number; lat: number } | null;
 };
 export type Control = "start" | "reveal" | "leaderboard" | "next" | "finish";
 export type SessionPlan = {
+  hintPenalty: 0 | 50;
   id: string;
   title: string;
   capacity: number;

@@ -1,7 +1,7 @@
 import { PGlite } from "@electric-sql/pglite";
 import { readFile, mkdir } from "node:fs/promises";
 import path from "node:path";
-import { starterQuestions as samples } from "@/content/starter";
+import { seedWorkshop } from "./workshop-seed";
 
 export const DEMO_ADMIN = "02be7e37-9acb-42d2-a290-19211cd8c77a";
 export async function initializeDatabase(db: PGlite) {
@@ -22,6 +22,7 @@ export async function initializeDatabase(db: PGlite) {
     "202610150011_preserve_room_snapshots",
     "202610150012_quiz_buzz",
     "202610150013_repair_buzz_windows",
+    "202610160014_workshop_rules",
   ]) {
     const applied = await db.query(
       "select name from public.local_migrations where name=$1",
@@ -50,17 +51,16 @@ const globalDatabase = globalThis as typeof globalThis & {
   earthplayVersion?: string;
 };
 export function localDatabase() {
-  if (globalDatabase.earthplayDb && globalDatabase.earthplayVersion !== "013")
+  if (
+    globalDatabase.earthplayDb &&
+    globalDatabase.earthplayVersion !== "014-workshop-final"
+  )
     globalDatabase.earthplayDb = globalDatabase.earthplayDb.then(async (db) => {
       await initializeDatabase(db);
-      for (const q of samples.filter((q) => q.kind === "riddle"))
-        await db.query(
-          "insert into public.questions(id,owner_id,body) values($1,$2,$3) on conflict do nothing",
-          [q.id, DEMO_ADMIN, JSON.stringify(q)],
-        );
+      await seedWorkshop(db, DEMO_ADMIN);
       return db;
     });
-  globalDatabase.earthplayVersion = "013";
+  globalDatabase.earthplayVersion = "014-workshop-final";
   return (globalDatabase.earthplayDb ??= (async () => {
     const dir = path.resolve(
       process.env.APP_DATA_DIR ||
@@ -70,31 +70,7 @@ export function localDatabase() {
     await mkdir(dir, { recursive: true });
     const db = new PGlite(dir);
     await initializeDatabase(db);
-    const count = await db.query<{ count: number }>(
-      "select count(*)::integer as count from public.questions",
-    );
-    if (!count.rows[0].count)
-      for (const q of samples)
-        await db.query(
-          "insert into public.questions(id,owner_id,body) values($1,$2,$3)",
-          [q.id, DEMO_ADMIN, JSON.stringify(q)],
-        );
-    // Upgrade an untouched sample bank without replacing any authored content.
-    const custom = await db.query(
-      "select id from public.questions where not (id=any($1::uuid[])) limit 1",
-      [samples.map((q) => q.id)],
-    );
-    if (!custom.rows.length)
-      for (const q of samples)
-        await db.query(
-          "insert into public.questions(id,owner_id,body) values($1,$2,$3) on conflict do nothing",
-          [q.id, DEMO_ADMIN, JSON.stringify(q)],
-        );
-    for (const q of samples.filter((q) => q.kind === "riddle"))
-      await db.query(
-        "insert into public.questions(id,owner_id,body) values($1,$2,$3) on conflict do nothing",
-        [q.id, DEMO_ADMIN, JSON.stringify(q)],
-      );
+    await seedWorkshop(db, DEMO_ADMIN);
     return db;
   })());
 }

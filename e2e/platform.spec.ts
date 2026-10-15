@@ -490,9 +490,9 @@ async function auth(context: BrowserContext) {
 }
 async function room(request: APIRequestContext, kinds: string[]) {
   // These scenarios explicitly exercise the optional phone-answer quiz mode.
-  if (kinds.includes("choice"))
+  for (const kind of kinds)
     await api(request, "bank_save", {
-      p_question: samples.find((q) => q.kind === "choice"),
+      p_question: samples.find((q) => q.kind === kind),
     });
   return api<{ id: string; code: string; view_token: string }>(
     request,
@@ -584,6 +584,7 @@ test("admin unlocks with a passcode, then can author the three Earth game format
     "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+jfFoAAAAASUVORK5CYII=",
     "base64",
   );
+  const authoredTitles = new Map<string, string>();
   for (const kind of ["place", "locate", "change"]) {
     await page.goto(`/admin/questions/?game=${kind}`);
     await page.getByRole("link", { name: "Soạn câu hỏi" }).click();
@@ -591,6 +592,7 @@ test("admin unlocks with a passcode, then can author the three Earth game format
       page.getByRole("combobox", { name: "Game", exact: true }),
     ).toHaveValue(kind);
     const title = `Authored ${kind} ${Date.now()}`;
+    authoredTitles.set(kind, title);
     await page.getByLabel("Câu hỏi", { exact: true }).fill(title);
     await page.locator('input[type="file"]').first().setInputFiles({
       name: "source.png",
@@ -639,7 +641,7 @@ test("admin unlocks with a passcode, then can author the three Earth game format
     .getByLabel("Tên phòng", { exact: true })
     .fill("Phiên tạo bằng form");
   for (const kind of ["place", "locate", "change"]) {
-    const title = samples.find((q) => q.kind === kind)!.title;
+    const title = authoredTitles.get(kind)!;
     await page
       .locator(".bank-choices button")
       .filter({ hasText: title })

@@ -45,13 +45,22 @@ Tên được chuẩn hóa Unicode, gộp khoảng trắng, bỏ ký tự vô h�
 
 Cách chơi chính là BUZZ để giành quyền nói trong phòng, MC chấm lời giải. Trắc nghiệm mặc định cũng dùng BUZZ. MC bấm **Bắt đầu → Mở BUZZ**; bấm sai thì MC mở lại cho người khác. Các lượt này không tự hết giờ. Ghép ảnh và trắc nghiệm được đặt rõ chế độ chọn trên điện thoại mới dùng đồng hồ và bài gửi. Kết quả chuông do server chốt nguyên tử; mỗi lần mở có mã lượt riêng để chặn yêu cầu cũ đến trễ. Thời gian ghi bằng đồng hồ server, không dùng thời gian do điện thoại tự khai.
 
-Các ảnh mẫu là SVG minh họa, **không phải ảnh vệ tinh hay tư liệu lịch sử đã kiểm chứng**. Người biên soạn tự thay ảnh, câu hỏi, đáp án và gợi ý. Game *Lost Field Notes* vẫn là concept theo mô tả ban đầu.
+Bản mới có sẵn bộ **Workshop · Quan sát Trái Đất**: 12 câu từ `resources/questions.pptx`, gồm cả câu trên slide ẩn. Ảnh trong cùng chuỗi được ghép thành gợi ý hoặc ảnh đáp án. Các câu mẫu cũ được lưu trữ khỏi kho; câu tự soạn và nội dung phòng đã tạo vẫn được giữ. [Danh mục câu và cách cập nhật](resources/README.md).
+
+## Dùng ngay cho workshop
+
+1. Vào `/admin` → **Bộ câu hỏi** → **Workshop · Quan sát Trái Đất**. Sửa câu, gợi ý hoặc độ khó nếu cần.
+2. Bấm **Tạo phòng** để chơi với mã phòng, QR và BUZZ như thường lệ. Tùy chọn **Mỗi gợi ý trừ 50 điểm** mặc định tắt; khi bật, trừ trước khi nhân ngôi sao, không âm điểm.
+3. Nếu chỉ muốn trình chiếu: từ bộ câu hỏi bấm **Trình chiếu**. Trong phòng đang chơi có nút **Chỉ trình chiếu**, mở đúng câu hiện tại. MC tự chuyển câu, mở gợi ý/đáp án; mọi người giơ tay và tính điểm bên ngoài. Chế độ này không ghi điểm hay thay đổi tiến độ phòng BUZZ.
+4. Trước buổi chơi, bấm **Tải bản dự phòng**. File HTML chứa cả câu hỏi và ảnh; mở bằng Edge/Chrome để chạy khi không có mạng hoặc server. Giữ file này trên máy MC vì có cả đáp án. Trong màn trình chiếu dùng ←/→ để chuyển câu, Space để hiện/ẩn đáp án.
+
+Sau khi màn trình chiếu tải xong các ảnh (nút tải dự phòng sáng), chuyển câu/gợi ý không cần gọi server. Muốn tải lại cả trang khi mất mạng, dùng file HTML đã tải. File dự phòng là bản chụp nội dung lúc tải; sửa bộ câu hỏi thì tải lại file.
 
 ## Soạn nội dung và lưu ảnh
 
 `/admin` chỉ dùng mật mã, không cần email hay Supabase Auth. Bản production chưa cấu hình sẽ hiện **Tạo mật mã / Nhập lại mật mã** ngay trên web. Mật mã được băm scrypt và lưu ở thư mục settings cạnh database; lần sau chỉ cần đăng nhập. `ADMIN_PASSCODE` vẫn có thể dùng để cấu hình hoặc ghi đè mật mã khi vận hành. Bản dev chưa có mật mã riêng vẫn dùng `earthplay`.
 
-Trang **Câu hỏi** chia theo sáu game, có tìm kiếm, lọc **Dễ / Vừa / Khó** và phân trang 10 / 20 / 50 câu. Bấm **Soạn câu hỏi** trong một game để thêm câu vào đúng game đó. Bản mới khởi tạo có 23 câu mẫu; nội dung thực tế do người tổ chức tự biên soạn.
+Trang **Câu hỏi** chia theo sáu game, có tìm kiếm, lọc **Dễ / Vừa / Khó** và phân trang 10 / 20 / 50 câu. Bấm **Soạn câu hỏi** trong một game để thêm câu vào đúng game đó. Bộ workshop và ảnh đi cùng source nên deploy mới vẫn có sẵn, không phải nhập lại. Khởi động lại app không ghi đè các câu đã sửa.
 
 Form chính gồm ảnh, câu hỏi, đáp án, gợi ý và **Giải thích / thông tin thêm**. Độ khó chọn ngay đầu form; điểm, thời gian của trắc nghiệm/ghép ảnh và nhãn nằm trong mục thu gọn. Game tọa độ có thể thêm ảnh đáp án; game biến động có thể thêm ảnh thứ hai. Bộ câu hỏi tham chiếu nội dung trong kho. Phòng đã tạo giữ bản nội dung riêng, không bị thay đổi khi sửa hoặc lưu trữ câu trong kho, kể cả khi MC đổi tên hay sắp xếp lại phòng trước khi chơi.
 

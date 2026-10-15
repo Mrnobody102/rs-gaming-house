@@ -72,6 +72,12 @@ export function SetsPage() {
               </Link>
               <Link
                 className="button secondary small"
+                href={`/admin/present/${s.id}/?source=set`}
+              >
+                Trình chiếu
+              </Link>
+              <Link
+                className="button secondary small"
                 href={
                   s.questionIds.length
                     ? `/admin/sessions/new/?set=${s.id}`

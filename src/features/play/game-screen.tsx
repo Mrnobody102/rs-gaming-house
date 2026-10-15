@@ -250,6 +250,14 @@ function LiveGame({
           {g.tiebreak?.active ? "Câu dự bị" : `Câu ${g.index + 1} / ${g.total}`}
         </span>
         <div className="game-header-end">
+          {canControl && (
+            <Link
+              className="presentation-tool"
+              href={`/admin/present/${id}/?source=session`}
+            >
+              Chỉ trình chiếu
+            </Link>
+          )}
           {projector && canControl && (
             <>
               <Link
@@ -358,6 +366,12 @@ function LiveGame({
             )}
             <p className="lobby-rules">
               Dễ 200 · Vừa 300 · Khó 400 điểm
+              {g.hintPenalty > 0 && (
+                <>
+                  <br />
+                  Mỗi gợi ý trừ {g.hintPenalty} điểm
+                </>
+              )}
               {g.starRounds > 0 && (
                 <>
                   <br />1 sao/người · đúng ×2 · sai 0
@@ -564,12 +578,13 @@ function LiveGame({
                 {g.hintCount < g.hintTotal && (
                   <button
                     className="button secondary small"
-                    disabled={busy}
+                    disabled={busy || (g.hintPenalty > 0 && !!g.buzzWinner)}
                     onClick={() =>
                       run("session_hint", { p_round_id: g.roundId })
                     }
                   >
                     Mở gợi ý {g.hintCount + 1}
+                    {g.hintPenalty > 0 && ` (−${g.hintPenalty})`}
                   </button>
                 )}
               </>

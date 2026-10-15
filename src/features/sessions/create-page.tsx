@@ -40,6 +40,7 @@ export function CreateSession({
     [busy, setBusy] = useState(false),
     [error, setError] = useState("");
   const [starIds, setStarIds] = useState<string[]>([]);
+  const [hintPenalty, setHintPenalty] = useState<0 | 50>(0);
   const [reserveIds, setReserveIds] = useState<string[]>([]);
   const [editable, setEditable] = useState(true);
   const [loadFailed, setLoadFailed] = useState(false);
@@ -65,6 +66,7 @@ export function CreateSession({
         if (plan) {
           setTitle(plan.title);
           setCapacity(plan.capacity);
+          setHintPenalty(plan.hintPenalty || 0);
           setIds(plan.questionIds);
           setStarIds(plan.starQuestionIds);
           setReserveIds(plan.reserveQuestionIds || []);
@@ -133,6 +135,7 @@ export function CreateSession({
     const payload = {
       title,
       capacity,
+      hintPenalty,
       questionIds: ids,
       starQuestionIds: starIds.filter((id) => ids.includes(id)),
       reserveQuestionIds: reserveIds.filter((id) => !ids.includes(id)),
@@ -277,6 +280,19 @@ export function CreateSession({
                   required
                 />
               </label>
+              {!editingSet && (
+                <label className="toggle-field">
+                  <input
+                    type="checkbox"
+                    checked={hintPenalty === 50}
+                    onChange={(e) => setHintPenalty(e.target.checked ? 50 : 0)}
+                  />
+                  <span>
+                    Mỗi gợi ý trừ 50 điểm{" "}
+                    <small>Trừ trước khi nhân ngôi sao.</small>
+                  </span>
+                </label>
+              )}
               {!editingSet && (
                 <label>
                   Số người tối đa

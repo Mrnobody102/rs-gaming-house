@@ -20,6 +20,7 @@ export const sessionInputSchema = z.object({
     .max(50)
     .refine((ids) => new Set(ids).size === ids.length, "Câu hỏi bị trùng."),
   capacity: z.number().int().min(2).max(60, "Tối đa 60 người."),
+  hintPenalty: z.union([z.literal(0), z.literal(50)]).default(0),
   starQuestionIds: z.array(z.uuid()).max(50).optional(),
   setId: z.uuid().optional(),
   reserveQuestionIds: z.array(z.uuid()).max(10).optional(),

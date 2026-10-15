@@ -132,7 +132,11 @@ export function EditorPage({
   }
   async function upload(
     file?: File,
-    field: "image" | "afterImage" | ((url: string) => void) = "image",
+    field:
+      | "image"
+      | "afterImage"
+      | "answerImage"
+      | ((url: string) => void) = "image",
   ) {
     if (!file) return;
     setUploading(true);
@@ -391,6 +395,16 @@ export function EditorPage({
                 onChange={(e) => patch({ explanation: e.target.value })}
               />
             </label>
+            <details className="editor-details">
+              <summary>Ảnh đáp án (tùy chọn)</summary>
+              <MediaField
+                label="Ảnh đáp án"
+                value={q.answerImage || ""}
+                busy={uploading}
+                onChange={(answerImage) => patch({ answerImage })}
+                onUpload={(file) => upload(file, "answerImage")}
+              />
+            </details>
             <details className="editor-details">
               <summary>
                 Điểm

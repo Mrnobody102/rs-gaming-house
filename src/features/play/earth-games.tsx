@@ -36,6 +36,7 @@ export function ImageViewer({
   onPlace?: (point: Coordinate) => void;
 }) {
   const [zoom, setZoom] = useState(1),
+    [ratio, setRatio] = useState(10 / 7),
     [center, setCenter] = useState({ x: 500, y: 350 }),
     [hover, setHover] = useState<Coordinate | null>(null);
   const drag = useRef<{
@@ -96,7 +97,7 @@ export function ImageViewer({
         {
           "--image-ratio": bounds
             ? (bounds.east - bounds.west) / (bounds.north - bounds.south)
-            : 10 / 7,
+            : ratio,
         } as CSSProperties
       }
     >
@@ -107,7 +108,7 @@ export function ImageViewer({
                 aspectRatio:
                   (bounds.east - bounds.west) / (bounds.north - bounds.south),
               }
-            : undefined
+            : { aspectRatio: ratio }
         }
         role="img"
         aria-label={
@@ -170,7 +171,7 @@ export function ImageViewer({
           href={src}
           width={1000}
           height={700}
-          preserveAspectRatio={bounds ? "none" : "xMidYMid meet"}
+          preserveAspectRatio="none"
         />
         {bounds &&
           [1, 2, 3].map((i) => (
@@ -226,6 +227,18 @@ export function ImageViewer({
           />
         )}
       </svg>
+      {!bounds && (
+        <img
+          src={src}
+          alt=""
+          hidden
+          onLoad={(e) =>
+            setRatio(
+              e.currentTarget.naturalWidth / e.currentTarget.naturalHeight,
+            )
+          }
+        />
+      )}
       <div className="image-tools">
         <button
           className="icon-button"
@@ -392,6 +405,13 @@ export function EarthStage({
   guess?: Coordinate | null;
   onGuess?: (point: Coordinate) => void;
 }) {
+  if (reveal && q.answerImage)
+    return (
+      <div className="earth-stage">
+        <ImageViewer key={q.answerImage} src={q.answerImage} />
+        {q.solution && <p className="place-solution">{q.solution}</p>}
+      </div>
+    );
   return (
     <EarthRound
       key={roundId}
@@ -425,7 +445,12 @@ function EarthRound({
   if (q.kind === "riddle")
     return (
       <div className="earth-stage riddle-stage">
-        {q.image && <ImageViewer src={q.image} />}
+        {(q.image || (reveal && q.answerImage)) && (
+          <ImageViewer
+            key={reveal && q.answerImage ? q.answerImage : q.image}
+            src={reveal && q.answerImage ? q.answerImage : q.image}
+          />
+        )}
         {reveal && <p className="place-solution">{q.solution}</p>}
       </div>
     );
