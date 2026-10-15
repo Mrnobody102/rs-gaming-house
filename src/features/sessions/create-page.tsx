@@ -75,7 +75,14 @@ export function CreateSession({
             ...(plan.reserveQuestions || []),
           ];
           setBank([
-            ...snapshots,
+            // Room star selections live in starIds. Re-adding a removed
+            // snapshot must use the bank's default, not the room's old flag.
+            ...snapshots.map((q) => ({
+              ...q,
+              hopeStar:
+                questions.find((source) => source.id === q.id)?.hopeStar ||
+                false,
+            })),
             ...questions.filter(
               (q) => !snapshots.some((saved) => saved.id === q.id),
             ),
@@ -106,6 +113,10 @@ export function CreateSession({
       [copy[i], copy[i + direction]] = [copy[i + direction], copy[i]];
       return copy;
     });
+  }
+  function removeQuestion(id: string) {
+    setIds((list) => list.filter((value) => value !== id));
+    setStarIds((stars) => stars.filter((value) => value !== id));
   }
   async function authorQuestion() {
     if (!setId || setId === "new") return;
@@ -241,241 +252,271 @@ export function CreateSession({
           message={`${missingIds.length} câu trong bộ đã được lưu trữ. Bỏ các câu đó khỏi thứ tự trước khi lưu hoặc tạo phòng.`}
         />
       )}
-      <div className="editor-columns">
-        <div className="form-stack">
-          <section className="panel">
-            {!editingSet && sets.length > 0 && (
-              <label className="set-picker">
-                Bộ câu hỏi
+      <fieldset className="editor-fields" disabled={busy || !editable}>
+        <div className="editor-columns">
+          <div className="form-stack">
+            <section className="panel">
+              {!editingSet && sets.length > 0 && (
+                <label className="set-picker">
+                  Bộ câu hỏi
+                  <select
+                    value={selectedSet}
+                    onChange={(e) => {
+                      setSelectedSet(e.target.value);
+                      const saved = sets.find((s) => s.id === e.target.value);
+                      if (saved) {
+                        setTitle(saved.title);
+                        setStarIds(saved.starQuestionIds || []);
+                        setReserveIds(saved.reserveQuestionIds || []);
+                        setIds(saved.questionIds);
+                      }
+                    }}
+                  >
+                    <option value="">Tự chọn câu hỏi</option>
+                    {sets.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.title}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+              )}
+              <div className="form-stack">
+                <label>
+                  {editingSet ? "Tên bộ câu hỏi" : "Tên phòng"}
+                  <input
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Ví dụ: Chiều thứ sáu"
+                    maxLength={100}
+                    required
+                  />
+                </label>
+                {!editingSet && (
+                  <label className="toggle-field">
+                    <input
+                      type="checkbox"
+                      checked={hintPenalty === 50}
+                      onChange={(e) =>
+                        setHintPenalty(e.target.checked ? 50 : 0)
+                      }
+                    />
+                    <span>
+                      Mỗi gợi ý trừ 50 điểm{" "}
+                      <small>Trừ trước khi nhân ngôi sao.</small>
+                    </span>
+                  </label>
+                )}
+                {!editingSet && (
+                  <label>
+                    Số người tối đa
+                    <input
+                      type="number"
+                      min={2}
+                      max={60}
+                      value={capacity}
+                      onChange={(e) => setCapacity(Number(e.target.value))}
+                    />
+                  </label>
+                )}
+              </div>
+            </section>
+            <section className="panel">
+              <div className="set-question-heading">
+                <h2>Chọn câu hỏi</h2>
+                {setId && setId !== "new" && (
+                  <button
+                    type="button"
+                    className="text-link"
+                    disabled={busy || missingIds.length > 0}
+                    onClick={authorQuestion}
+                  >
+                    <Plus size={15} />
+                    <span>Soạn câu mới</span>
+                  </button>
+                )}
+              </div>
+              <div className="question-pick-filters">
+                <input
+                  aria-label="Tìm câu để tạo phòng"
+                  placeholder="Tìm câu hỏi…"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                />
                 <select
-                  value={selectedSet}
-                  onChange={(e) => {
-                    setSelectedSet(e.target.value);
-                    const saved = sets.find((s) => s.id === e.target.value);
-                    if (saved) {
-                      setTitle(saved.title);
-                      setStarIds(saved.starQuestionIds || []);
-                      setReserveIds(saved.reserveQuestionIds || []);
-                      setIds(saved.questionIds);
-                    }
-                  }}
+                  aria-label="Lọc game khi tạo phòng"
+                  value={kind}
+                  onChange={(e) => setKind(e.target.value)}
                 >
-                  <option value="">Tự chọn câu hỏi</option>
-                  {sets.map((s) => (
-                    <option key={s.id} value={s.id}>
-                      {s.title}
+                  <option value="all">Mọi game</option>
+                  {Object.entries(kindLabels).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
                     </option>
                   ))}
                 </select>
-              </label>
-            )}
-            <div className="form-stack">
-              <label>
-                {editingSet ? "Tên bộ câu hỏi" : "Tên phòng"}
-                <input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder="Ví dụ: Chiều thứ sáu"
-                  maxLength={100}
-                  required
-                />
-              </label>
-              {!editingSet && (
-                <label className="toggle-field">
-                  <input
-                    type="checkbox"
-                    checked={hintPenalty === 50}
-                    onChange={(e) => setHintPenalty(e.target.checked ? 50 : 0)}
-                  />
-                  <span>
-                    Mỗi gợi ý trừ 50 điểm{" "}
-                    <small>Trừ trước khi nhân ngôi sao.</small>
-                  </span>
-                </label>
+                <select
+                  aria-label="Lọc độ khó khi tạo phòng"
+                  value={difficulty}
+                  onChange={(e) => setDifficulty(e.target.value)}
+                >
+                  <option value="all">Mọi độ khó</option>
+                  {Object.entries(difficultyLabels).map(([key, label]) => (
+                    <option key={key} value={key}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="bank-choices">
+                {filterQuestions(bank || [], { query, kind, difficulty }).map(
+                  (q) => (
+                    <button
+                      type="button"
+                      className={ids.includes(q.id) ? "selected" : ""}
+                      onClick={() => {
+                        if (!ids.includes(q.id))
+                          setReserveIds((reserves) =>
+                            reserves.filter((id) => id !== q.id),
+                          );
+                        if (!ids.includes(q.id) && q.hopeStar)
+                          setStarIds((stars) => [
+                            ...stars.filter((id) => id !== q.id),
+                            q.id,
+                          ]);
+                        if (ids.includes(q.id))
+                          setStarIds((stars) =>
+                            stars.filter((id) => id !== q.id),
+                          );
+                        setIds(
+                          ids.includes(q.id)
+                            ? ids.filter((v) => v !== q.id)
+                            : [...ids, q.id],
+                        );
+                      }}
+                      key={q.id}
+                    >
+                      <span className="checkbox">
+                        {ids.includes(q.id) && <Check size={14} />}
+                      </span>
+                      <div>
+                        <strong>{q.title}</strong>
+                        <small>
+                          {kindLabels[q.kind]} ·{" "}
+                          {difficultyLabels[difficultyOf(q)]} ·{" "}
+                          {pointsForDifficulty(q.difficulty)} điểm
+                        </small>
+                      </div>
+                    </button>
+                  ),
+                )}
+              </div>
+              {!bank?.length && (
+                <Link className="button secondary" href="/admin/questions/new/">
+                  <Plus size={17} /> Soạn câu hỏi
+                </Link>
               )}
-              {!editingSet && (
-                <label>
-                  Số người tối đa
-                  <input
-                    type="number"
-                    min={2}
-                    max={60}
-                    value={capacity}
-                    onChange={(e) => setCapacity(Number(e.target.value))}
-                  />
-                </label>
-              )}
-            </div>
-          </section>
-          <section className="panel">
+            </section>
+            <ReserveFields
+              bank={bank || []}
+              mainIds={ids}
+              ids={reserveIds}
+              onChange={setReserveIds}
+            />
+          </div>
+          <aside className="panel selected-questions">
             <div className="set-question-heading">
-              <h2>Chọn câu hỏi</h2>
-              {setId && setId !== "new" && (
+              <h2>
+                Thứ tự câu hỏi <span className="count">{ids.length}</span>
+              </h2>
+              {ids.length > 0 && (
                 <button
                   type="button"
                   className="text-link"
-                  disabled={busy || missingIds.length > 0}
-                  onClick={authorQuestion}
+                  onClick={() => {
+                    if (
+                      !confirm(
+                        `Bỏ tất cả câu chính khỏi ${editingSet ? "bộ" : "phòng"} này? Câu hỏi trong kho vẫn được giữ.`,
+                      )
+                    )
+                      return;
+                    setIds([]);
+                    setStarIds([]);
+                  }}
                 >
-                  <Plus size={15} />
-                  <span>Soạn câu mới</span>
+                  Bỏ tất cả
                 </button>
               )}
             </div>
-            <div className="question-pick-filters">
-              <input
-                aria-label="Tìm câu để tạo phòng"
-                placeholder="Tìm câu hỏi…"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-              />
-              <select
-                aria-label="Lọc game khi tạo phòng"
-                value={kind}
-                onChange={(e) => setKind(e.target.value)}
-              >
-                <option value="all">Mọi game</option>
-                {Object.entries(kindLabels).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-              <select
-                aria-label="Lọc độ khó khi tạo phòng"
-                value={difficulty}
-                onChange={(e) => setDifficulty(e.target.value)}
-              >
-                <option value="all">Mọi độ khó</option>
-                {Object.entries(difficultyLabels).map(([key, label]) => (
-                  <option key={key} value={key}>
-                    {label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="bank-choices">
-              {filterQuestions(bank || [], { query, kind, difficulty }).map(
-                (q) => (
+            <p className="muted selection-scope">
+              {editingSet
+                ? "Bỏ câu chỉ thay đổi bộ này."
+                : "Bỏ câu chỉ thay đổi phòng này."}
+            </p>
+            <p className="set-scoring-note">Dễ 200 · Vừa 300 · Khó 400 điểm</p>
+            {ids.map((id, i) => (
+              <div className="ordered-question" key={id}>
+                <span>{i + 1}</span>
+                <div className="ordered-question-content">
+                  <strong>
+                    {bank?.find((q) => q.id === id)?.title ||
+                      "Câu hỏi đã lưu trữ"}
+                  </strong>
+                  <label className="round-star-toggle">
+                    <input
+                      type="checkbox"
+                      checked={starIds.includes(id)}
+                      onChange={(e) =>
+                        setStarIds((stars) =>
+                          e.target.checked
+                            ? [...stars, id]
+                            : stars.filter((x) => x !== id),
+                        )
+                      }
+                    />
+                    <Star size={13} /> Cho phép ngôi sao
+                  </label>
+                </div>
+                <div>
                   <button
                     type="button"
-                    className={ids.includes(q.id) ? "selected" : ""}
-                    onClick={() => {
-                      if (!ids.includes(q.id))
-                        setReserveIds((reserves) =>
-                          reserves.filter((id) => id !== q.id),
-                        );
-                      if (!ids.includes(q.id) && q.hopeStar)
-                        setStarIds((stars) => [
-                          ...stars.filter((id) => id !== q.id),
-                          q.id,
-                        ]);
-                      if (ids.includes(q.id))
-                        setStarIds((stars) =>
-                          stars.filter((id) => id !== q.id),
-                        );
-                      setIds(
-                        ids.includes(q.id)
-                          ? ids.filter((v) => v !== q.id)
-                          : [...ids, q.id],
-                      );
-                    }}
-                    key={q.id}
+                    className="icon-button"
+                    aria-label={`Đưa câu ${i + 1} lên`}
+                    disabled={i === 0}
+                    onClick={() => move(i, -1)}
                   >
-                    <span className="checkbox">
-                      {ids.includes(q.id) && <Check size={14} />}
-                    </span>
-                    <div>
-                      <strong>{q.title}</strong>
-                      <small>
-                        {kindLabels[q.kind]} ·{" "}
-                        {difficultyLabels[difficultyOf(q)]} ·{" "}
-                        {pointsForDifficulty(q.difficulty)} điểm
-                      </small>
-                    </div>
+                    <ArrowUp size={15} />
                   </button>
-                ),
-              )}
-            </div>
-            {!bank?.length && (
-              <Link className="button secondary" href="/admin/questions/new/">
-                <Plus size={17} /> Soạn câu hỏi
-              </Link>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    aria-label={`Đưa câu ${i + 1} xuống`}
+                    disabled={i === ids.length - 1}
+                    onClick={() => move(i, 1)}
+                  >
+                    <ArrowDown size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    className="icon-button"
+                    aria-label={`Bỏ câu ${i + 1}`}
+                    title={editingSet ? "Bỏ khỏi bộ này" : "Bỏ khỏi phòng này"}
+                    onClick={() => removeQuestion(id)}
+                  >
+                    <X size={15} />
+                  </button>
+                </div>
+              </div>
+            ))}
+            {!ids.length && <p className="muted">Chọn câu hỏi ở bên trái.</p>}
+            {ids.length > 0 && (
+              <p className="set-scoring-note">
+                Mỗi người 1 sao/phiên. Đúng ×2, sai 0.
+              </p>
             )}
-          </section>
-          <ReserveFields
-            bank={bank || []}
-            mainIds={ids}
-            ids={reserveIds}
-            onChange={setReserveIds}
-          />
+          </aside>
         </div>
-        <aside className="panel selected-questions">
-          <h2>
-            Thứ tự câu hỏi <span className="count">{ids.length}</span>
-          </h2>
-          <p className="set-scoring-note">Dễ 200 · Vừa 300 · Khó 400 điểm</p>
-          {ids.map((id, i) => (
-            <div className="ordered-question" key={id}>
-              <span>{i + 1}</span>
-              <div className="ordered-question-content">
-                <strong>
-                  {bank?.find((q) => q.id === id)?.title ||
-                    "Câu hỏi đã lưu trữ"}
-                </strong>
-                <label className="round-star-toggle">
-                  <input
-                    type="checkbox"
-                    checked={starIds.includes(id)}
-                    onChange={(e) =>
-                      setStarIds((stars) =>
-                        e.target.checked
-                          ? [...stars, id]
-                          : stars.filter((x) => x !== id),
-                      )
-                    }
-                  />
-                  <Star size={13} /> Cho phép ngôi sao
-                </label>
-              </div>
-              <div>
-                <button
-                  type="button"
-                  className="icon-button"
-                  aria-label={`Đưa câu ${i + 1} lên`}
-                  disabled={i === 0}
-                  onClick={() => move(i, -1)}
-                >
-                  <ArrowUp size={15} />
-                </button>
-                <button
-                  type="button"
-                  className="icon-button"
-                  aria-label={`Đưa câu ${i + 1} xuống`}
-                  disabled={i === ids.length - 1}
-                  onClick={() => move(i, 1)}
-                >
-                  <ArrowDown size={15} />
-                </button>
-                <button
-                  type="button"
-                  className="icon-button"
-                  aria-label={`Bỏ câu ${i + 1}`}
-                  onClick={() => setIds(ids.filter((x) => x !== id))}
-                >
-                  <X size={15} />
-                </button>
-              </div>
-            </div>
-          ))}
-          {!ids.length && <p className="muted">Chọn câu hỏi ở bên trái.</p>}
-          {ids.length > 0 && (
-            <p className="set-scoring-note">
-              Mỗi người 1 sao/phiên. Đúng ×2, sai 0.
-            </p>
-          )}
-        </aside>
-      </div>
+      </fieldset>
     </form>
   );
 }

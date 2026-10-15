@@ -644,6 +644,51 @@ fieldset {
 .session-row:hover {
   border-color: #b5c89d;
 }
+.session-open {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  align-items: center;
+  gap: 24px;
+}
+.session-row:has(.session-open) {
+  flex-wrap: wrap;
+}
+.session-open .session-name {
+  min-width: 0;
+}
+.session-open h2 {
+  overflow-wrap: anywhere;
+}
+.session-open .badge {
+  flex-shrink: 0;
+}
+.danger-action {
+  color: #994532;
+}
+.editor-fields {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.selection-scope {
+  font-size: 12px;
+  margin-block: 10px;
+}
+@media (max-width: 680px) {
+  .session-open {
+    flex-wrap: wrap;
+    gap: 12px;
+    flex-basis: 100%;
+  }
+  .session-open .session-name {
+    min-width: 140px;
+  }
+  .control-heading > div {
+    flex-wrap: wrap;
+  }
+}
 .session-code {
   font-size: 16px;
   font-weight: 700;

@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Plus, Layers, Archive, ArrowUpRight, Play, Star } from "lucide-react";
+import { Plus, Layers, Trash2, ArrowUpRight, Play, Star } from "lucide-react";
 import { command } from "@/shared/client/api";
 import { Loading, ErrorMessage } from "@/shared/ui/status";
 export type QuestionSet = {
@@ -14,18 +14,29 @@ export type QuestionSet = {
 export function SetsPage() {
   const [sets, setSets] = useState<QuestionSet[] | null>(null),
     [error, setError] = useState("");
+  const [deleting, setDeleting] = useState<string | null>(null);
   useEffect(() => {
     command<QuestionSet[]>("set_list")
       .then(setSets)
       .catch((e) => setError(e.message));
   }, []);
   async function archive(s: QuestionSet) {
-    if (!confirm(`Lưu trữ bộ câu hỏi “${s.title}”?`)) return;
+    if (
+      deleting ||
+      !confirm(
+        `Xóa bộ câu hỏi “${s.title}”? Câu hỏi trong kho và các phòng đã tạo vẫn được giữ.`,
+      )
+    )
+      return;
+    setDeleting(s.id);
+    setError("");
     try {
       await command("set_archive", { p_id: s.id });
       setSets((list) => list?.filter((v) => v.id !== s.id) || []);
     } catch (e) {
       setError((e as Error).message);
+    } finally {
+      setDeleting(null);
     }
   }
   return (
@@ -91,10 +102,11 @@ export function SetsPage() {
               </Link>
               <button
                 className="icon-button"
-                aria-label={`Lưu trữ ${s.title}`}
+                aria-label={`Xóa bộ câu hỏi ${s.title}`}
+                disabled={deleting !== null}
                 onClick={() => archive(s)}
               >
-                <Archive size={17} />
+                <Trash2 size={17} />
               </button>
               <Link
                 href={`/admin/sets/${s.id}/`}

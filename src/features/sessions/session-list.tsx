@@ -5,6 +5,7 @@ import { Plus, ArrowUpRight } from "lucide-react";
 import { command } from "@/shared/client/api";
 import { ErrorMessage, Loading, phaseLabels } from "@/shared/ui/status";
 import type { SessionSummary } from "./model";
+import { DeleteSessionButton } from "./delete-session-button";
 export function SessionList() {
   const [list, setList] = useState<SessionSummary[] | null>(null),
     [error, setError] = useState("");
@@ -27,21 +28,29 @@ export function SessionList() {
       ) : list?.length ? (
         <div className="session-list">
           {list.map((s) => (
-            <Link
-              className="session-row"
-              href={`/admin/sessions/${s.id}/`}
-              key={s.id}
-            >
-              <div className="session-code">{s.code}</div>
-              <div className="session-name">
-                <h2>{s.title}</h2>
-                <p>
-                  {s.total} câu · Tối đa {s.capacity} người
-                </p>
-              </div>
-              <span className="badge">{phaseLabels[s.phase]}</span>
-              <ArrowUpRight size={20} />
-            </Link>
+            <article className="session-row" key={s.id}>
+              <Link className="session-open" href={`/admin/sessions/${s.id}/`}>
+                <div className="session-code">{s.code}</div>
+                <div className="session-name">
+                  <h2>{s.title}</h2>
+                  <p>
+                    {s.total} câu · Tối đa {s.capacity} người
+                  </p>
+                </div>
+                <span className="badge">{phaseLabels[s.phase]}</span>
+                <ArrowUpRight size={20} />
+              </Link>
+              <DeleteSessionButton
+                id={s.id}
+                title={s.title}
+                onError={setError}
+                onDeleted={() =>
+                  setList(
+                    (rows) => rows?.filter((row) => row.id !== s.id) || [],
+                  )
+                }
+              />
+            </article>
           ))}
         </div>
       ) : (

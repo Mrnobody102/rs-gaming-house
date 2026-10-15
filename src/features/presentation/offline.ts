@@ -1,4 +1,5 @@
 import type { Question } from "@/features/questions/model";
+import { APP_NAME } from "@/shared/brand";
 
 export async function embedImages(questions: Question[]) {
   const urls = new Set<string>();
@@ -54,9 +55,9 @@ export function presentationHtml(
     /</g,
     "\\u003c",
   );
-  return `<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EARTH//PLAY</title>
+  return `<!doctype html><html lang="vi"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${APP_NAME}</title>
 <style>*{box-sizing:border-box}body{margin:0;background:#182820;color:#faf5df;font:20px Arial,sans-serif}header,footer{padding:14px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}header{border-bottom:1px solid #ffffff26}header span{margin-right:auto}main{text-align:center;max-width:1800px;margin:auto;padding:12px 24px}h1{font-size:clamp(22px,3vw,38px);margin:10px}#image{max-width:100%;max-height:64vh;object-fit:contain}button,select{font:inherit;border:1px solid #ffffff60;border-radius:8px;padding:10px;background:#344a3b;color:inherit;cursor:pointer}button:disabled{opacity:.4;cursor:default}footer{justify-content:center;position:sticky;bottom:0;background:#182820}#solution{font-size:28px;color:#d9f67d}#hints{display:flex;flex-wrap:wrap;gap:20px;justify-content:center}#hints img{max-width:360px;max-height:220px}#explanation{max-width:1100px;margin:16px auto;line-height:1.5}#options{display:flex;gap:24px;justify-content:center;flex-wrap:wrap}#points{color:#d9f67d;font-size:17px}a{color:inherit}</style>
-<header><span>EARTH//PLAY · Chỉ trình chiếu</span><select id="select" aria-label="Chọn câu hỏi"></select><button id="full">Toàn màn hình</button></header>
+<header><span>${APP_NAME} · Chỉ trình chiếu</span><select id="select" aria-label="Chọn câu hỏi"></select><button id="full">Toàn màn hình</button></header>
 <main><p id="points"></p><h1 id="title"></h1><a id="zoom" target="_blank"><img id="image" alt="Ảnh câu hỏi"></a><div id="options"></div><div id="hints"></div><p id="solution"></p><p id="explanation"></p></main>
 <footer><button id="previous">Câu trước</button><button id="hint">Mở gợi ý</button><button id="reveal">Xem đáp án</button><button id="next">Câu tiếp theo</button><label><input id="penalty" type="checkbox"> Mỗi gợi ý −50 điểm</label></footer>
 <script>const data=${data};document.title=data.title;let index=0,opened=0,revealed=false;const el=id=>document.getElementById(id);el('penalty').checked=data.hintPenalty===50;data.questions.forEach((q,i)=>{const o=document.createElement('option');o.value=i;o.textContent=(i+1)+' / '+data.questions.length;el('select').append(o)});

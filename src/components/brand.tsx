@@ -1,4 +1,5 @@
-import { Orbit } from "lucide-react";
+import { ScanSearch } from "lucide-react";
+import { APP_NAME } from "@/shared/brand";
 export function Brand({
   small = false,
   href = "/",
@@ -10,11 +11,13 @@ export function Brand({
     <a
       className={`brand ${small ? "small" : ""}`}
       href={href}
-      aria-label="EARTH PLAY — Trang chủ"
+      aria-label={`${APP_NAME.replace("//", " ")} — Trang chủ`}
     >
-      <Orbit size={small ? 24 : 29} strokeWidth={1.3} />
+      <ScanSearch size={small ? 24 : 29} strokeWidth={1.5} />
       <span>
-        EARTH<span className="brand-slash">//</span>PLAY
+        {APP_NAME.split("//")[0]}
+        <span className="brand-slash">//</span>
+        {APP_NAME.split("//")[1]}
       </span>
     </a>
   );

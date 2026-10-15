@@ -122,7 +122,7 @@ export function PresentationPage({
     );
     const a = document.createElement("a");
     a.href = url;
-    a.download = "earthplay-workshop.html";
+    a.download = "pixel-hunt-workshop.html";
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }

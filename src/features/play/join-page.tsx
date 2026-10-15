@@ -6,6 +6,7 @@ import { ArrowRight, ScanLine } from "lucide-react";
 import { QrScanner } from "./qr-scanner";
 import { randomToken } from "@/shared/client/random";
 import { Brand } from "@/components/brand";
+import { APP_NAME } from "@/shared/brand";
 import { command } from "@/shared/client/api";
 import { ErrorMessage } from "@/shared/ui/status";
 export function JoinPage() {
@@ -108,7 +109,7 @@ export function JoinPage() {
         </form>
       </main>
       <footer>
-        <span>EARTH//PLAY</span>
+        <span>{APP_NAME}</span>
         <Link href="/admin/">Quản trị</Link>
       </footer>
       {scanning && (

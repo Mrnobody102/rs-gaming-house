@@ -17,6 +17,7 @@ export const commands = {
   set_add_question: z.object({ p_id: id, p_question_id: id }),
   set_archive: z.object({ p_id: id }),
   session_list: z.object({}),
+  session_delete: z.object({ p_id: id }),
   session_create: sessionInputSchema.transform((v) => ({
     p_title: v.title,
     p_question_ids: v.questionIds,

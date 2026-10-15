@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { APP_NAME } from "@/shared/brand";
 
 export const metadata: Metadata = {
-  title: "EARTH//PLAY",
-  description: "Trắc nghiệm và ghép ảnh trên một màn hình chung.",
+  title: APP_NAME,
+  description: "Đoán ảnh vệ tinh, bấm chuông và giành điểm.",
 };
 
 export default function RootLayout({

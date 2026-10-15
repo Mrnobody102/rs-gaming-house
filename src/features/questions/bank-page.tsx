@@ -5,7 +5,7 @@ import {
   Plus,
   Search,
   ImageIcon,
-  Archive,
+  Trash2,
   Pencil,
   ChevronLeft,
   ChevronRight,
@@ -39,7 +39,7 @@ export function BankPage({
   async function archive(q: Question) {
     if (
       !confirm(
-        `Lưu trữ câu “${q.title}”? Các phòng đã tạo vẫn giữ câu hỏi này.`,
+        `Xóa câu “${q.title}” khỏi kho và các bộ đang dùng? Các phòng đã tạo vẫn giữ câu hỏi này.`,
       )
     )
       return;
@@ -200,10 +200,10 @@ export function BankPage({
                             type="button"
                             className="icon-button"
                             disabled={archiving === q.id}
-                            aria-label={`Lưu trữ ${q.title}`}
+                            aria-label={`Xóa câu hỏi ${q.title}`}
                             onClick={() => archive(q)}
                           >
-                            <Archive size={16} />
+                            <Trash2 size={16} />
                           </button>
                         </div>
                       </td>

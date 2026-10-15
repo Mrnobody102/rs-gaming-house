@@ -49,8 +49,14 @@ export async function POST(request: NextRequest) {
       ? error.message
       : "Không thực hiện được. Hãy thử lại.";
     return NextResponse.json(
-      { error: message },
-      { status: denied ? 403 : 400 },
+      {
+        error: message,
+        code: error.code === "P0002" ? "ROOM_NOT_FOUND" : undefined,
+      },
+      {
+        status: denied ? 403 : error.code === "P0002" ? 404 : 400,
+        headers: { "Cache-Control": "no-store" },
+      },
     );
   }
 }

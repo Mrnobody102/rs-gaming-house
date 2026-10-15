@@ -163,8 +163,11 @@ function LiveGame({
         {error ? (
           <>
             <ErrorMessage message={error} />
-            <Link href="/" className="button secondary">
-              Về màn nhập mã
+            <Link
+              href={host ? "/admin/sessions/" : "/"}
+              className="button secondary"
+            >
+              {host ? "Về danh sách phòng" : "Về màn nhập mã"}
             </Link>
           </>
         ) : (

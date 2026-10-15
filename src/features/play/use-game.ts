@@ -1,6 +1,6 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { command } from "@/shared/client/api";
+import { command, CommandError } from "@/shared/client/api";
 import type { GameView } from "@/features/sessions/model";
 import { acceptSnapshot } from "./state";
 export function useGame(id: string, token: string) {
@@ -44,6 +44,11 @@ export function useGame(id: string, token: string) {
         if (!abort.signal.aborted) {
           setOnline(false);
           setError((e as Error).message);
+          if (e instanceof CommandError && e.code === "ROOM_NOT_FOUND") {
+            setGame(null);
+            events.close();
+            abort.abort();
+          }
         }
       } finally {
         pending = false;

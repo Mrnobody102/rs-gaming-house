@@ -23,6 +23,7 @@ export async function initializeDatabase(db: PGlite) {
     "202610150012_quiz_buzz",
     "202610150013_repair_buzz_windows",
     "202610160014_workshop_rules",
+    "202610160015_deletion",
   ]) {
     const applied = await db.query(
       "select name from public.local_migrations where name=$1",
@@ -53,14 +54,14 @@ const globalDatabase = globalThis as typeof globalThis & {
 export function localDatabase() {
   if (
     globalDatabase.earthplayDb &&
-    globalDatabase.earthplayVersion !== "014-workshop-final"
+    globalDatabase.earthplayVersion !== "015-deletion"
   )
     globalDatabase.earthplayDb = globalDatabase.earthplayDb.then(async (db) => {
       await initializeDatabase(db);
       await seedWorkshop(db, DEMO_ADMIN);
       return db;
     });
-  globalDatabase.earthplayVersion = "014-workshop-final";
+  globalDatabase.earthplayVersion = "015-deletion";
   return (globalDatabase.earthplayDb ??= (async () => {
     const dir = path.resolve(
       process.env.APP_DATA_DIR ||

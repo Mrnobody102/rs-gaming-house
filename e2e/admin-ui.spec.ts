@@ -112,12 +112,8 @@ test("admin pages keep sets discoverable, forms complete and controls readable a
       ).ok(),
     ).toBe(true);
   await page.goto(`/admin/sets/${setId}/`);
-  await expect(page.locator(".notice.error")).toContainText("đã được lưu trữ");
-  await expect(page.locator(".ordered-question")).toHaveCount(2);
-  await expect(
-    page.getByRole("button", { name: "Lưu bộ câu hỏi", exact: true }),
-  ).toBeDisabled();
-  await page.getByRole("button", { name: "Bỏ câu 1", exact: true }).click();
+  await expect(page.locator(".notice.error")).toHaveCount(0);
+  await expect(page.locator(".ordered-question")).toHaveCount(1);
   await expect(
     page.getByRole("button", { name: "Lưu bộ câu hỏi", exact: true }),
   ).toBeEnabled();

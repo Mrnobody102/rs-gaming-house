@@ -1,4 +1,4 @@
-# EARTH//PLAY
+# PIXEL//HUNT
 
 Game viễn thám cho workshop: **Đoán địa danh**, **Truy tìm tọa độ quá khứ**, **Giải mã biến động**. Có thêm trắc nghiệm và ghép ảnh. Người chơi nhập mã phòng hoặc quét QR, nhập tên và thi đấu cá nhân. MC điều khiển trên laptop, có màn trình chiếu riêng.
 
@@ -57,6 +57,8 @@ Bản mới có sẵn bộ **Workshop · Quan sát Trái Đất**: 12 câu từ 
 Sau khi màn trình chiếu tải xong các ảnh (nút tải dự phòng sáng), chuyển câu/gợi ý không cần gọi server. Muốn tải lại cả trang khi mất mạng, dùng file HTML đã tải. File dự phòng là bản chụp nội dung lúc tải; sửa bộ câu hỏi thì tải lại file.
 
 ## Soạn nội dung và lưu ảnh
+
+**Xóa và bỏ câu:** Trong bộ hoặc phòng chờ, nút **Bỏ câu** (hoặc **Bỏ tất cả**) chỉ đổi danh sách câu chính của nơi đang sửa; cần bấm lưu. Câu trong kho và phòng/bộ khác vẫn còn. Phòng đã bắt đầu khóa sửa danh sách. Xóa câu khỏi kho tự bỏ câu đó khỏi danh sách câu chính, ngôi sao và dự bị của các bộ; các phòng đã tạo giữ nội dung riêng. Xóa bộ không xóa câu trong kho hay phòng đã tạo. Nút **Xóa phòng** có ở danh sách phòng và màn MC; xóa cả người chơi, lượt trả lời và điểm của phòng đó sau xác nhận. Người đang mở phòng đã xóa sẽ thấy thông báo và nút về màn nhập mã.
 
 `/admin` chỉ dùng mật mã, không cần email hay Supabase Auth. Bản production chưa cấu hình sẽ hiện **Tạo mật mã / Nhập lại mật mã** ngay trên web. Mật mã được băm scrypt và lưu ở thư mục settings cạnh database; lần sau chỉ cần đăng nhập. `ADMIN_PASSCODE` vẫn có thể dùng để cấu hình hoặc ghi đè mật mã khi vận hành. Bản dev chưa có mật mã riêng vẫn dùng `earthplay`.
 
