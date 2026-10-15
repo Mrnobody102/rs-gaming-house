@@ -21,6 +21,7 @@ export async function initializeDatabase(db: PGlite) {
     "202610150010_authoring_guards",
     "202610150011_preserve_room_snapshots",
     "202610150012_quiz_buzz",
+    "202610150013_repair_buzz_windows",
   ]) {
     const applied = await db.query(
       "select name from public.local_migrations where name=$1",
@@ -49,7 +50,7 @@ const globalDatabase = globalThis as typeof globalThis & {
   earthplayVersion?: string;
 };
 export function localDatabase() {
-  if (globalDatabase.earthplayDb && globalDatabase.earthplayVersion !== "012")
+  if (globalDatabase.earthplayDb && globalDatabase.earthplayVersion !== "013")
     globalDatabase.earthplayDb = globalDatabase.earthplayDb.then(async (db) => {
       await initializeDatabase(db);
       for (const q of samples.filter((q) => q.kind === "riddle"))
@@ -59,7 +60,7 @@ export function localDatabase() {
         );
       return db;
     });
-  globalDatabase.earthplayVersion = "012";
+  globalDatabase.earthplayVersion = "013";
   return (globalDatabase.earthplayDb ??= (async () => {
     const dir = path.resolve(
       process.env.APP_DATA_DIR ||
