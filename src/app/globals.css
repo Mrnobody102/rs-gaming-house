@@ -2289,6 +2289,7 @@ fieldset {
   text-align: center;
 }
 .buzz-button {
+  touch-action: manipulation;
   width: 160px;
   min-height: 62px;
   border-radius: 14px;
@@ -2316,6 +2317,13 @@ fieldset {
 }
 .buzz-winner strong {
   color: var(--accent);
+}
+.buzz-time {
+  display: block;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  color: #ccddb7;
+  margin-top: 5px;
 }
 .buzz-area > p + p {
   font-size: 12px;

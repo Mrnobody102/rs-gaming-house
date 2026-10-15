@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { gameCatalog } from "@/features/games/catalog";
+import { usesBuzz } from "@/features/games/catalog";
 import type { Question } from "./model";
 
 export function ReserveFields({
@@ -14,9 +14,7 @@ export function ReserveFields({
   ids: string[];
   onChange: (ids: string[]) => void;
 }) {
-  const choices = bank.filter(
-    (q) => !mainIds.includes(q.id) && gameCatalog[q.kind].answerMode === "buzz",
-  );
+  const choices = bank.filter((q) => !mainIds.includes(q.id) && usesBuzz(q));
   return (
     <details className="panel reserve-fields">
       <summary>

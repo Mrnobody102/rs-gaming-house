@@ -12,6 +12,13 @@ async function rpc<T = GameView>(
   args: unknown[],
   admin = false,
 ): Promise<T> {
+  if (name === "buzz_submit" && args.length === 3) {
+    const { rows } = await db.query<{ id: string | null }>(
+      "select buzz_open_id as id from public.session_rounds where id=$1",
+      [args[1]],
+    );
+    args = [...args, rows[0]?.id];
+  }
   return db.transaction(async (tx) => {
     await tx.query("select set_config('request.jwt.claim.sub',$1,true)", [
       admin ? DEMO_ADMIN : "",
@@ -42,6 +49,54 @@ afterAll(async () => {
   await db.close();
 });
 describe("Earth observation games", () => {
+  it("uses server-timed quiz BUZZ, rejects stale openings and keeps the first winner", async () => {
+    const q = questionSchema.parse({
+      ...newQuestion("choice"),
+      title: "Quiz buzz",
+      options: ["Yes", "No"],
+      correct: 0,
+    });
+    await rpc("bank_save", [q], true);
+    const s = await rpc<{ id: string; code: string }>(
+      "session_create",
+      ["Quiz buzz", [q.id], 60],
+      true,
+    );
+    const a = crypto.randomUUID(),
+      b = crypto.randomUUID();
+    await rpc("session_join", [s.code, "First", a]);
+    await rpc("session_join", [s.code, "Second", b]);
+    let g = await rpc("session_view", [s.id, ""], true);
+    g = await rpc("session_control", [s.id, "start", g.roundId], true);
+    expect(g.deadline).toBeNull();
+    await expect(
+      rpc("answer_submit", [s.id, g.roundId, a, { choice: 0 }]),
+    ).rejects.toThrow("BUZZ");
+    g = await rpc("buzz_control", [s.id, g.roundId, true], true);
+    const oldWindow = g.buzzId;
+    expect(
+      (await rpc("buzz_control", [s.id, g.roundId, true], true)).buzzId,
+    ).toBe(oldWindow);
+    await rpc("buzz_control", [s.id, g.roundId, false], true);
+    g = await rpc("buzz_control", [s.id, g.roundId, true], true);
+    expect(g.buzzId).not.toBe(oldWindow);
+    await expect(
+      rpc("buzz_submit", [s.id, g.roundId, a, oldWindow]),
+    ).rejects.toThrow("thay đổi");
+    await db.query(
+      "update public.session_rounds set buzz_opened_at=clock_timestamp()-interval '0.5 seconds' where id=$1",
+      [g.roundId],
+    );
+    const first = await rpc("buzz_submit", [s.id, g.roundId, a, g.buzzId]);
+    const later = await rpc("buzz_submit", [s.id, g.roundId, b, g.buzzId]);
+    expect(later.buzzWinner).toEqual(first.buzzWinner);
+    expect(first.buzzWinner?.id).toBe(first.myId);
+    expect(first.buzzWinner?.elapsedMs).toBeGreaterThanOrEqual(500);
+    expect(first.buzzWinner?.elapsedMs).toBeLessThan(3000);
+    g = await rpc("buzz_grade", [s.id, g.roundId, first.myId, true], true);
+    expect(g.phase).toBe("result");
+    expect(g.standings[0].score).toBe(300);
+  });
   it("keeps room snapshots when editing a lobby after bank edits or archival", async () => {
     const qs = ["Original main", "Original reserve", "New main"].map((title) =>
       questionSchema.parse({
@@ -201,6 +256,7 @@ describe("Earth observation games", () => {
   it("resolves tied prize places using reserve BUZZ rounds without points or stars", async () => {
     const main = questionSchema.parse({
       ...newQuestion("choice"),
+      interaction: "submit",
       title: "Normal round",
       difficulty: "easy",
       options: ["Yes", "No"],
@@ -390,6 +446,7 @@ describe("Earth observation games", () => {
     const qs = [1, 2].map(() =>
       questionSchema.parse({
         ...newQuestion("choice"),
+        interaction: "submit",
         title: "Rank question",
         options: ["Yes", "No"],
         correct: 0,

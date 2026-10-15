@@ -21,8 +21,15 @@ export function useGame(id: string, token: string) {
     const abort = new AbortController();
     let timer: ReturnType<typeof setTimeout>;
     let pending = false;
+    let dirty = false;
+    let streaming = false;
     async function refresh() {
-      if (pending || abort.signal.aborted) return;
+      if (abort.signal.aborted) return;
+      if (pending) {
+        dirty = true;
+        return;
+      }
+      dirty = false;
       pending = true;
       clearTimeout(timer);
       try {
@@ -41,10 +48,26 @@ export function useGame(id: string, token: string) {
       } finally {
         pending = false;
         if (!abort.signal.aborted)
-          timer = setTimeout(refresh, document.hidden ? 4000 : 1200);
+          timer = setTimeout(
+            refresh,
+            dirty ? 0 : document.hidden ? 15000 : streaming ? 6000 : 1200,
+          );
       }
     }
     refresh();
+    const events = new EventSource(
+      `/api/events/?${new URLSearchParams({ id, token })}`,
+    );
+    events.onopen = () => {
+      streaming = true;
+    };
+    events.addEventListener("change", () => {
+      void refresh();
+    });
+    events.onerror = () => {
+      streaming = false;
+      void refresh();
+    };
     const wake = () => {
       if (!document.hidden) refresh();
     };
@@ -54,6 +77,7 @@ export function useGame(id: string, token: string) {
     document.addEventListener("visibilitychange", wake);
     return () => {
       alive.current = false;
+      events.close();
       abort.abort();
       clearTimeout(timer);
       window.removeEventListener("online", wake);

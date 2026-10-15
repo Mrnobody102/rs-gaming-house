@@ -16,7 +16,9 @@ Người chơi tự nhập nickname khi tham gia, không có tài khoản. Brows
 
 Câu hỏi và câu dự bị được snapshot khi tạo phiên. Sửa hoặc lưu trữ trong kho không đổi nội dung đã chốt của phiên. Sửa tên, sức chứa hay thứ tự trong phòng chờ giữ các snapshot còn được chọn; câu mới thêm lấy từ kho đang hoạt động. Bộ câu hỏi lưu danh sách ID để dùng nội dung trong kho khi tạo phiên mới. Trước reveal, server loại đáp án, địa danh, tọa độ mục tiêu, vùng biến động và gợi ý chưa mở. Ảnh hiện tại của game tọa độ chỉ có sau reveal. Ảnh trước/sau game biến động luôn có để so sánh. Tính điểm trong transaction, chỉ một answer cho mỗi người/câu; retry không cộng thêm.
 
-Client dùng polling 1,2 giây, chậm hơn khi tab ẩn, có abort, không chồng request và không nhận lại snapshot cũ hơn. Không cần Realtime service. Khi mất mạng, màn hiện tại giữ lại và không nhận thêm bài; khôi phục kết nối sẽ đọc trạng thái server. Token và phần ghép ảnh chưa gửi giữ trong browser; điểm không nằm trong localStorage.
+Client nhận thông báo thay đổi qua SSE rồi tải snapshot. Bus trong process chỉ phát sau khi transaction commit; các kết quả trùng revision không tạo thêm thông báo. Khi SSE hoạt động, polling đối soát mỗi 6 giây; khi mất SSE, polling dự phòng mỗi 1,2 giây. Tab ẩn polling mỗi 15 giây. Có abort, không chồng request và không nhận lại snapshot cũ hơn. Khi mất mạng, màn hiện tại giữ lại và không nhận thêm bài; khôi phục kết nối sẽ đọc trạng thái server. Token và phần ghép ảnh chưa gửi giữ trong browser; điểm không nằm trong localStorage.
+
+Trắc nghiệm mặc định dùng BUZZ, có thể bật chọn trên điện thoại khi soạn. SQL và client dùng cùng quy tắc phân loại; bài gửi bị chặn trên câu dùng chuông. Mỗi lần MC mở chuông có UUID mới, yêu cầu phải kèm UUID đó. Thời gian người thắng lấy từ `buzz_opened_at`/`buzzed_at` của database, không nhận timestamp từ client. Thứ tự là thứ tự server chấp nhận trong khóa phòng; không suy ra thứ tự chạm vật lý khi mạng hai máy khác nhau.
 
 ## Tọa độ và ảnh
 

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { gameCatalog } from "@/features/games/catalog";
+import { usesBuzz } from "@/features/games/catalog";
 import type { Question } from "@/features/questions/model";
 import type { GameView, SessionPlan } from "@/features/sessions/model";
 import { command } from "@/shared/client/api";
@@ -25,9 +25,7 @@ export function TiebreakControls({
     ])
       .then(([list, plan]) => {
         const seen = new Set([...plan.questionIds, ...plan.reserveQuestionIds]);
-        const choices = list.filter(
-          (q) => !seen.has(q.id) && gameCatalog[q.kind].answerMode === "buzz",
-        );
+        const choices = list.filter((q) => !seen.has(q.id) && usesBuzz(q));
         setBank(choices);
         setSelected(choices[0]?.id || "");
       })

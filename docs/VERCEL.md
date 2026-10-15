@@ -11,10 +11,11 @@ Hiện `server/local-database.ts` mở PGlite trên filesystem; `admin-settings.
 - Ảnh câu hỏi và gợi ý lưu trên Cloudinary hoặc object storage. Upload trực tiếp có chữ ký để ảnh lớn không đi qua body của Vercel Function. Route upload hiện tại proxy ảnh tối đa 8 MB, trong khi Vercel Function giới hạn payload 4,5 MB. Chỉ đổi `MEDIA_STORAGE=cloudinary` chưa giải quyết giới hạn này. [Vercel request body size](https://vercel.com/docs/functions/limitations#request-body-size).
 - Đặt `ADMIN_PASSCODE`, `ADMIN_SESSION_SECRET` ổn định trong environment; không dùng setup mật mã qua file trên Vercel. Đặt `JOIN_BASE_URL` bằng domain HTTPS công khai.
 - Đặt API và database gần nhau. Nếu dùng transaction pooler, giữ claims trong cùng transaction với lời gọi SQL; tắt prepared statements theo hướng dẫn của provider.
+- Bản Node hiện dùng bus SSE trong process để báo mở/đóng/thắng chuông. Khi chuyển sang nhiều instance/serverless, phải thay bus này bằng kênh dùng chung (ví dụ managed realtime); thay database riêng lẻ chưa đủ để các instance phát cùng sự kiện.
 
 ## Tải cần kiểm chứng
 
-Hiện client lấy trạng thái khoảng mỗi 1,2 giây: 60 máy đang hoạt động tương đương khoảng **50 request/giây**, chưa tính MC, trình chiếu, thao tác và retry. Vercel có khả năng mở rộng Functions, nhưng giới hạn nền tảng không chứng minh độ trễ BUZZ hay khả năng chịu tải của database ứng dụng. [Vercel Functions limits](https://vercel.com/docs/functions/limitations).
+Client hiện nhận thông báo SSE rồi tải trạng thái. Khi SSE hoạt động, polling đối soát mỗi 6 giây (60 máy tương đương khoảng 10 request/giây nền); khi SSE mất kết nối, polling mỗi 1,2 giây (khoảng 50 request/giây). Các đợt thao tác, MC, trình chiếu và retry tạo thêm tải. Vercel có khả năng mở rộng Functions, nhưng giới hạn nền tảng không chứng minh độ trễ BUZZ hay khả năng chịu tải của database ứng dụng. [Vercel Functions limits](https://vercel.com/docs/functions/limitations).
 
 Kiểm tra HTTP cục bộ ngày 15/10/2026, trên bản Next.js production và PGlite: 60 người tham gia, một đợt 60 yêu cầu đọc đồng thời hoàn tất trong **290 ms**, một đợt 60 yêu cầu BUZZ đồng thời trong **308 ms**; đúng một người thắng, chỉ một người được cộng điểm, không có request lỗi. Đây là thời gian toàn đợt trên loopback, không phải p95 từng request, không mô phỏng 60 trình duyệt tải ảnh hay tải liên tục và không phải kết quả đo trên Vercel.
 

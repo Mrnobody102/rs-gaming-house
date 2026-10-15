@@ -328,13 +328,19 @@ test("tied finalists use reserve BUZZ questions to settle the prize podium", asy
     await expect(
       page.getByText("Reserve question 1", { exact: true }),
     ).toBeVisible();
+    await page.getByRole("button", { name: "Mở BUZZ", exact: true }).click();
     g = await api(context.request, "session_view", { p_id: s.id });
     expect(
       (
         await request.post("/api/command/", {
           data: {
             command: "buzz_submit",
-            args: { p_id: s.id, p_round_id: g.roundId, p_token: outsideToken },
+            args: {
+              p_id: s.id,
+              p_round_id: g.roundId,
+              p_buzz_id: g.buzzId,
+              p_token: outsideToken,
+            },
           },
         })
       ).status(),
@@ -342,7 +348,6 @@ test("tied finalists use reserve BUZZ questions to settle the prize podium", asy
     await expect(
       b.getByRole("button", { name: "Ngôi sao hy vọng", exact: true }),
     ).toHaveCount(0);
-    await page.getByRole("button", { name: "Mở BUZZ", exact: true }).click();
     await expect(
       b.getByRole("button", { name: "BUZZ", exact: true }),
     ).toBeEnabled();
@@ -434,7 +439,7 @@ test("60 concurrent players read state and compete for a single BUZZ winner thro
     p_round_id: g.roundId,
     p_action: "start",
   });
-  await api(context.request, "buzz_control", {
+  g = await api(context.request, "buzz_control", {
     p_id: s.id,
     p_round_id: g.roundId,
     p_open: true,
@@ -445,6 +450,7 @@ test("60 concurrent players read state and compete for a single BUZZ winner thro
       api(request, "buzz_submit", {
         p_id: s.id,
         p_round_id: g.roundId,
+        p_buzz_id: g.buzzId,
         p_token,
       }),
     ),
@@ -483,6 +489,11 @@ async function auth(context: BrowserContext) {
   ).toBe(true);
 }
 async function room(request: APIRequestContext, kinds: string[]) {
+  // These scenarios explicitly exercise the optional phone-answer quiz mode.
+  if (kinds.includes("choice"))
+    await api(request, "bank_save", {
+      p_question: samples.find((q) => q.kind === "choice"),
+    });
   return api<{ id: string; code: string; view_token: string }>(
     request,
     "session_create",

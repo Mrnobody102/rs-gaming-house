@@ -7,7 +7,9 @@ import { puzzleQuestions } from "./puzzle";
 import { riddleQuestions } from "./riddle";
 export const starterQuestions = [
   ...riddleQuestions,
-  ...samples,
+  ...samples.map((q) =>
+    q.kind === "choice" ? { ...q, interaction: "buzz" as const } : q,
+  ),
   ...placeQuestions,
   ...locateQuestions,
   ...changeQuestions,

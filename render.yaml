@@ -1,0 +1,35 @@
+# Creates a PAID web service and persistent disk. See docs/RENDER.md.
+services:
+  - type: web
+    name: earth-play
+    runtime: node
+    region: singapore
+    plan: 1c-2g
+    numInstances: 1
+    buildCommand: npm ci && npm run build
+    startCommand: node .next/standalone/server.js
+    healthCheckPath: /api/health/
+    autoDeployTrigger: "off"
+    disk:
+      name: earth-play-data
+      mountPath: /var/data
+      sizeGB: 1
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOCAL_PREVIEW
+        value: "0"
+      - key: HOSTNAME
+        value: 0.0.0.0
+      - key: APP_DATA_DIR
+        value: /var/data/postgres
+      - key: ADMIN_SETTINGS_DIR
+        value: /var/data/settings
+      - key: MEDIA_DIR
+        value: /var/data/media
+      - key: MEDIA_STORAGE
+        value: local
+      - key: ADMIN_PASSCODE
+        sync: false
+      - key: ADMIN_SESSION_SECRET
+        generateValue: true

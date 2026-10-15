@@ -30,7 +30,7 @@ Trang tham gia có **Quét QR**: mở camera trên HTTPS/localhost hoặc chọn
 | Đoán địa danh | Quan sát ảnh, zoom/pan, MC mở gợi ý | Người chơi BUZZ, trả lời trực tiếp; MC chọn đúng/sai |
 | Truy tìm tọa độ | Quan sát ảnh có chú thích do tác giả chuẩn bị, trả lời tọa độ bằng lời | BUZZ và MC xác nhận |
 | Giải mã biến động | Quan sát một ảnh hoặc so sánh hai ảnh bằng thanh kéo | BUZZ và MC xác nhận |
-| Trắc nghiệm | Mỗi người chọn đáp án trên điện thoại | Server tự chấm khi MC công bố |
+| Trắc nghiệm | Mặc định bấm chuông, trả lời trực tiếp; tùy chọn chọn đáp án trên điện thoại | MC chấm khi dùng chuông; server tự chấm chế độ chọn |
 | Ghép ảnh | Chọn hai mảnh để đổi chỗ, gửi kết quả | Server kiểm tra thứ tự mảnh khi MC công bố |
 
 Sau đáp án: **Bảng điểm → Câu tiếp theo**. Điểm thuộc từng cá nhân, được lưu trong database; tải lại trang giữ tên, câu trả lời và điểm. BUZZ sai có thể mở lại cho người khác. Mỗi người chỉ được chấm một lần mỗi câu, retry không cộng điểm thêm.
@@ -43,7 +43,7 @@ Trong bộ/phiên có mục **Câu dự bị** để chọn sẵn tối đa 10 c
 
 Tên được chuẩn hóa Unicode, gộp khoảng trắng, bỏ ký tự vô hình và kiểm tra trùng không phân biệt chữ hoa/thường trong cùng phòng; tham gia lại với cùng token giữ nguyên người chơi. Server còn chặn vượt sức chứa, câu hỏi trùng trong một phiên, dùng sao lần hai, gửi/chấm lặp và thao tác sai câu/sai giai đoạn.
 
-Cách chơi chính là BUZZ để giành quyền nói trong phòng, MC chấm lời giải. Những lượt này không tự hết giờ. Trắc nghiệm và ghép ảnh là lựa chọn phụ; chỉ hai dạng đó dùng đồng hồ và bài gửi trên điện thoại.
+Cách chơi chính là BUZZ để giành quyền nói trong phòng, MC chấm lời giải. Trắc nghiệm mặc định cũng dùng BUZZ. MC bấm **Bắt đầu → Mở BUZZ**; bấm sai thì MC mở lại cho người khác. Các lượt này không tự hết giờ. Ghép ảnh và trắc nghiệm được đặt rõ chế độ chọn trên điện thoại mới dùng đồng hồ và bài gửi. Kết quả chuông do server chốt nguyên tử; mỗi lần mở có mã lượt riêng để chặn yêu cầu cũ đến trễ. Thời gian ghi bằng đồng hồ server, không dùng thời gian do điện thoại tự khai.
 
 Các ảnh mẫu là SVG minh họa, **không phải ảnh vệ tinh hay tư liệu lịch sử đã kiểm chứng**. Người biên soạn tự thay ảnh, câu hỏi, đáp án và gợi ý. Game *Lost Field Notes* vẫn là concept theo mô tả ban đầu.
 
@@ -98,5 +98,7 @@ npm run start:demo # bản production cục bộ, cổng 3200
 Triển khai lên **một Node.js server/container có ổ đĩa bền vững**, đặt mật mã riêng và dùng HTTPS. Build standalone và Dockerfile đã có sẵn. Mount thư mục dữ liệu; ví dụ `APP_DATA_DIR=/data/postgres`, `ADMIN_SETTINGS_DIR=/data/settings`, `MEDIA_DIR=/data/media`. Không dùng filesystem tạm của serverless cho database; Cloudinary chỉ lưu ảnh. Khi chuyển sang nhiều app instance hoặc serverless, cần thay adapter database sang Postgres được quản lý. Hiện tại chưa cần Supabase để thử hoặc tổ chức một phòng 30–60 người.
 
 Để dùng **Vercel**, cần thay PGlite/file ảnh bằng database và storage dùng chung, cấu hình mật mã qua environment, đồng thời xử lý upload trực tiếp cho ảnh lớn. Xem [đánh giá tải 50–60 người và các thay đổi cần thiết](docs/VERCEL.md).
+
+Deploy **Render**: đã có Blueprint `render.yaml`, Node 24, disk bền vững, health check và secret quản trị. Xem [hướng dẫn từng bước](docs/RENDER.md); Blueprint tạo tài nguyên trả phí.
 
 Trạng thái chơi và điểm được ghi trên server; trình duyệt giữ token tham gia để nối lại. Chỉ thử tải đồng thời trên máy cục bộ, chưa phải benchmark hosting thật. Chi tiết ở [kiến trúc](docs/ARCHITECTURE.md) và [kiểm tra](docs/VALIDATION.md).

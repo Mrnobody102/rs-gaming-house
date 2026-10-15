@@ -10,6 +10,7 @@ import { MediaField } from "./media-field";
 import { HintFields } from "./hint-fields";
 import { cleanHints, hintSlots } from "@/features/games/hints";
 import { pointsForDifficulty } from "@/features/games/scoring";
+import { usesBuzz } from "@/features/games/catalog";
 import type { QuestionSet } from "./sets-page";
 import { difficultyLabels, difficultyOf } from "./difficulty";
 import {
@@ -393,12 +394,29 @@ export function EditorPage({
             <details className="editor-details">
               <summary>
                 Điểm
-                {q.kind === "choice" || q.kind === "puzzle"
-                  ? ", thời gian"
-                  : ""}{" "}
-                và nhãn
+                {!usesBuzz(q) ? ", thời gian" : ""} và nhãn
               </summary>
               <div className="form-stack">
+                {q.kind === "choice" && (
+                  <label>
+                    Cách trả lời
+                    <select
+                      value={q.interaction || "buzz"}
+                      onChange={(e) =>
+                        patch({
+                          interaction: e.target.value as "buzz" | "submit",
+                        })
+                      }
+                    >
+                      <option value="buzz">
+                        Bấm chuông · trả lời trực tiếp
+                      </option>
+                      <option value="submit">
+                        Chọn đáp án trên điện thoại
+                      </option>
+                    </select>
+                  </label>
+                )}
                 <div className="field-pair">
                   <label>
                     Điểm
@@ -408,7 +426,7 @@ export function EditorPage({
                       readOnly
                     />
                   </label>
-                  {(q.kind === "choice" || q.kind === "puzzle") && (
+                  {!usesBuzz(q) && (
                     <label>
                       Thời gian (giây)
                       <input

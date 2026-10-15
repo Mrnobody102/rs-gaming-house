@@ -65,6 +65,7 @@ export const commands = {
   buzz_submit: z.object({
     p_id: id,
     p_round_id: id,
+    p_buzz_id: id,
     p_token: z.string().min(32).max(200),
   }),
   buzz_control: z.object({ p_id: id, p_round_id: id, p_open: z.boolean() }),

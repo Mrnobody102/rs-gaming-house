@@ -39,11 +39,13 @@ export type GameView = {
   host: boolean;
   syncTopic: string;
   buzzOpen: boolean;
+  buzzId: string | null;
   buzzWinner: {
     id: string;
     name: string;
     graded: boolean;
     hopeStar?: boolean;
+    elapsedMs?: number | null;
   } | null;
   star: { selected: boolean; used: boolean };
   starRounds: number;

@@ -4,6 +4,7 @@ export const choiceSchema = z
   .object({
     ...common,
     kind: z.literal("choice"),
+    interaction: z.enum(["buzz", "submit"]).optional(),
     options: z
       .array(
         z

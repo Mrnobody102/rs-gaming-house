@@ -1,13 +1,18 @@
-import type { Question } from "./question-schema";
+import type { Question, PublicQuestion } from "./question-schema";
 import { randomId } from "@/shared/client/random";
 export const gameCatalog = {
   riddle: { label: "Đoán đáp án", answerMode: "buzz" },
   place: { label: "Đoán địa danh", answerMode: "buzz" },
   locate: { label: "Truy tìm tọa độ", answerMode: "buzz" },
   change: { label: "Giải mã biến động", answerMode: "buzz" },
-  choice: { label: "Trắc nghiệm", answerMode: "choice" },
+  choice: { label: "Trắc nghiệm", answerMode: "buzz" },
   puzzle: { label: "Ghép ảnh", answerMode: "puzzle" },
 } as const;
+export function usesBuzz(q: Question | PublicQuestion) {
+  return q.kind === "choice"
+    ? q.interaction !== "submit"
+    : gameCatalog[q.kind].answerMode === "buzz";
+}
 export const kindLabels = Object.fromEntries(
   Object.entries(gameCatalog).map(([key, value]) => [key, value.label]),
 ) as Record<keyof typeof gameCatalog, string>;
@@ -29,7 +34,13 @@ export function newQuestion(kind: Question["kind"]): Question {
     case "riddle":
       return { ...base, kind, solution: "", hints: ["", "", ""] };
     case "choice":
-      return { ...base, kind, options: ["", "", "", ""], correct: 0 };
+      return {
+        ...base,
+        kind,
+        interaction: "buzz",
+        options: ["", "", "", ""],
+        correct: 0,
+      };
     case "puzzle":
       return { ...base, kind, seconds: 120, grid: 2 };
     case "place":

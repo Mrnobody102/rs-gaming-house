@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
   Check,
@@ -20,7 +20,7 @@ import type { Control, GameView } from "@/features/sessions/model";
 import { useGame } from "./use-game";
 import { Puzzle } from "./puzzle";
 import { EarthStage } from "./earth-games";
-import { gameCatalog } from "@/features/games/catalog";
+import { usesBuzz } from "@/features/games/catalog";
 import { Ranking } from "./ranking";
 import { SessionContents } from "@/features/sessions/session-contents";
 import { GameHints } from "./game-hints";
@@ -94,6 +94,7 @@ function LiveGame({
     [tiles, setTiles] = useState<number[]>([]),
     [base, setBase] = useState(joinBase);
   const updateTiles = useCallback((value: number[]) => setTiles(value), []);
+  const actionPending = useRef(false);
   useEffect(() => {
     if (joinBase) setBase(joinBase);
     else
@@ -106,6 +107,8 @@ function LiveGame({
     return () => clearInterval(tick);
   }, []);
   async function run(name: string, args: object = {}) {
+    if (actionPending.current) return;
+    actionPending.current = true;
     setBusy(true);
     setActionError("");
     try {
@@ -113,6 +116,7 @@ function LiveGame({
     } catch (e) {
       setActionError((e as Error).message);
     } finally {
+      actionPending.current = false;
       setBusy(false);
     }
   }
@@ -155,7 +159,7 @@ function LiveGame({
   const q = g.question,
     reveal = ["result", "leaderboard", "finished"].includes(g.phase),
     scoreboard = g.phase === "leaderboard" || g.phase === "finished",
-    eo = gameCatalog[q.kind].answerMode === "buzz";
+    eo = usesBuzz(q);
   const seconds = g.deadline
     ? Math.max(0, Math.ceil((Date.parse(g.deadline) - now - offset) / 1000))
     : q.seconds;
@@ -345,7 +349,7 @@ function LiveGame({
                   return (
                     <button
                       key={i}
-                      disabled={!canAnswer || locked}
+                      disabled={eo || !canAnswer || locked}
                       className={`answer-color color-${i} ${reveal ? (q.correct === i ? "is-correct" : "is-wrong") : ""} ${chosen ? "is-chosen" : ""}`}
                       onClick={() => answer({ choice: i })}
                     >
@@ -410,6 +414,11 @@ function LiveGame({
               {g.buzzWinner ? (
                 <p className="buzz-winner">
                   <strong>{g.buzzWinner.name}</strong> giành quyền trả lời
+                  {g.buzzWinner.elapsedMs != null && (
+                    <small className="buzz-time">
+                      {(g.buzzWinner.elapsedMs / 1000).toFixed(3)} s
+                    </small>
+                  )}
                   {g.buzzWinner.hopeStar && (
                     <span className="winner-star">
                       <Star size={16} fill="currentColor" /> ×2
@@ -419,10 +428,20 @@ function LiveGame({
               ) : canAnswer ? (
                 <button
                   className={`buzz-button ${g.buzzOpen ? "open" : ""}`}
-                  disabled={locked || !g.buzzOpen}
-                  onClick={() =>
+                  disabled={locked || !g.buzzOpen || !g.buzzId}
+                  onPointerDown={(event) => {
+                    if (event.button === 0)
+                      void run("buzz_submit", {
+                        p_round_id: g.roundId,
+                        p_buzz_id: g.buzzId,
+                        p_token: token,
+                      });
+                  }}
+                  onClick={(event) =>
+                    event.detail === 0 &&
                     run("buzz_submit", {
                       p_round_id: g.roundId,
+                      p_buzz_id: g.buzzId,
                       p_token: token,
                     })
                   }

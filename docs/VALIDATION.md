@@ -4,6 +4,8 @@
 
 `npm run build`: build standalone, kiểm tra TypeScript và đóng gói migration/media tĩnh.
 
+Kiểm tra chuông trắc nghiệm mặc định: không chọn đáp án trực tiếp, không có đồng hồ hết giờ, lấy thời gian từ database, khóa đúng người thắng đầu tiên, chặn mã mở chuông cũ. Trình duyệt kiểm tra SSE thật (không dựa vào polling), nhận lượt nhấn ngay ở pointer-down, chấm đúng và hiển thị điểm. Chế độ chọn trên điện thoại được kiểm tra riêng bằng câu đặt `interaction: submit`.
+
 `npm run test:e2e`: trình duyệt Edge trên Windows hoặc Chromium trên Linux. Chạy server production riêng cổng 3201 với database/media thử riêng. Kiểm tra giao diện tham gia, mật mã admin, phòng có QR, nhiều browser độc lập, các kiểu chơi, chấm điểm và form soạn nội dung. Ảnh chụp nằm trong `artifacts/`, trace lỗi trong `test-results/`.
 
 Có thêm server production cổng 3202 không đặt mật mã sẵn để kiểm tra setup lần đầu, giữ mật mã sau đăng xuất, tạo phòng chơi thử, quản lý câu hỏi theo game, lọc độ khó và phân trang 10/20/50 câu. Form tọa độ/biến động được kiểm tra với một ảnh và đáp án chữ, không cần tọa độ hay khoanh vùng. Có kiểm tra che đáp án/thông tin thêm trước công bố và ba gợi ý do MC mở.

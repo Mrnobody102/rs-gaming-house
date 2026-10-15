@@ -3,6 +3,7 @@ export const samples: Question[] = [
   {
     id: "7b0c6f11-5dd8-4d44-8ba7-b03a2bea1101",
     kind: "choice",
+    interaction: "submit",
     difficulty: "easy",
     title: "NDVI thường được dùng để theo dõi điều gì?",
     image: "",

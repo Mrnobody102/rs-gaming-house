@@ -1,6 +1,7 @@
 import type { NextRequest } from "next/server";
 import { isAdmin } from "./admin-auth";
 import { type Command } from "./commands";
+import { publishGameChange } from "./game-events";
 const casts: Record<string, string> = {
   p_id: "uuid",
   p_question: "jsonb",
@@ -12,6 +13,7 @@ const casts: Record<string, string> = {
   p_set_id: "uuid",
   p_active: "boolean",
   p_round_id: "uuid",
+  p_buzz_id: "uuid",
   p_participant_id: "uuid",
   p_capacity: "integer",
   p_open: "boolean",
@@ -40,7 +42,7 @@ export async function execute(
     });
   const { localDatabase, DEMO_ADMIN } = await import("./local-database");
   const db = await localDatabase();
-  return db.transaction(async (tx) => {
+  const result = await db.transaction(async (tx) => {
     await tx.query("select set_config('request.jwt.claim.sub',$1,true)", [
       admin ? DEMO_ADMIN : "",
     ]);
@@ -54,4 +56,16 @@ export async function execute(
     );
     return rows[0].result;
   });
+  if (
+    command !== "session_view" &&
+    result &&
+    typeof result === "object" &&
+    "id" in result &&
+    "revision" in result &&
+    typeof result.id === "string" &&
+    typeof result.revision === "number"
+  ) {
+    publishGameChange(result.id, result.revision);
+  }
+  return result;
 }
