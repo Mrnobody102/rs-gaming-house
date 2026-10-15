@@ -2325,6 +2325,9 @@ fieldset {
   color: #ccddb7;
   margin-top: 5px;
 }
+.game-reload {
+  margin: 0 0 16px;
+}
 .buzz-area > p + p {
   font-size: 12px;
   margin-top: 6px;

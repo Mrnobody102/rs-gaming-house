@@ -13,7 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { Brand } from "@/components/brand";
-import { command, getConfig } from "@/shared/client/api";
+import { command, CommandError, getConfig } from "@/shared/client/api";
 import { ErrorMessage, Loading } from "@/shared/ui/status";
 import { kindLabels, type Answer } from "@/features/questions/model";
 import type { Control, GameView } from "@/features/sessions/model";
@@ -95,6 +95,7 @@ function LiveGame({
     [base, setBase] = useState(joinBase);
   const updateTiles = useCallback((value: number[]) => setTiles(value), []);
   const actionPending = useRef(false);
+  const [needsReload, setNeedsReload] = useState(false);
   useEffect(() => {
     if (joinBase) setBase(joinBase);
     else
@@ -115,6 +116,8 @@ function LiveGame({
       receive(await command<GameView>(name, { p_id: id, ...args }));
     } catch (e) {
       setActionError((e as Error).message);
+      if (e instanceof CommandError && e.code === "BUZZ_CLIENT_OUTDATED")
+        setNeedsReload(true);
     } finally {
       actionPending.current = false;
       setBusy(false);
@@ -171,6 +174,16 @@ function LiveGame({
       !!g.myAnswer,
     canAnswer =
       !host && !projector && (!g.tiebreak?.active || g.tiebreak.myEligible);
+  const missingBuzzWindow = eo && g.buzzOpen && !g.buzzId;
+  function buzz() {
+    // Pointer events can reach a disabled button on some browsers.
+    if (!g || !canAnswer || locked || !g.buzzOpen || !g.buzzId) return;
+    void run("buzz_submit", {
+      p_round_id: g.roundId,
+      p_buzz_id: g.buzzId,
+      p_token: token,
+    });
+  }
   const joinUrl = `${base.replace(/\/$/, "")}/?code=${g.code}`,
     me = g.standings.find((p) => p.id === g.myId);
   return (
@@ -206,9 +219,24 @@ function LiveGame({
       </header>
       <ErrorMessage
         message={
-          actionError || (!online ? "Mất kết nối. Đang thử kết nối lại…" : "")
+          actionError ||
+          (missingBuzzWindow
+            ? "Màn chơi chưa cập nhật mã lượt chuông. Tải lại màn chơi để tiếp tục."
+            : !online
+              ? "Mất kết nối. Đang thử kết nối lại…"
+              : "")
         }
       />
+      {(needsReload || missingBuzzWindow) && (
+        <div className="game-reload">
+          <button
+            className="button secondary small"
+            onClick={() => location.reload()}
+          >
+            Tải lại màn chơi
+          </button>
+        </div>
+      )}
       {g.phase === "lobby" ? (
         <main className="room-lobby">
           <div className="room-entry">
@@ -430,21 +458,11 @@ function LiveGame({
                   className={`buzz-button ${g.buzzOpen ? "open" : ""}`}
                   disabled={locked || !g.buzzOpen || !g.buzzId}
                   onPointerDown={(event) => {
-                    if (event.button === 0)
-                      void run("buzz_submit", {
-                        p_round_id: g.roundId,
-                        p_buzz_id: g.buzzId,
-                        p_token: token,
-                      });
+                    if (event.button === 0) buzz();
                   }}
-                  onClick={(event) =>
-                    event.detail === 0 &&
-                    run("buzz_submit", {
-                      p_round_id: g.roundId,
-                      p_buzz_id: g.buzzId,
-                      p_token: token,
-                    })
-                  }
+                  onClick={(event) => {
+                    if (event.detail === 0) buzz();
+                  }}
                 >
                   BUZZ
                 </button>

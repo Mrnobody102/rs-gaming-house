@@ -75,8 +75,54 @@ test("quiz defaults to a server-timed bell with live notifications and pointer-d
     await expect(player.getByRole("timer")).toHaveCount(0);
     const bell = player.getByRole("button", { name: "BUZZ", exact: true });
     await expect(bell).toBeDisabled();
+    let buzzRequests = 0;
+    player.on("request", (request) => {
+      if (
+        request.url().includes("/api/command/") &&
+        request.postDataJSON()?.command === "buzz_submit"
+      )
+        buzzRequests++;
+    });
+    await bell.dispatchEvent("pointerdown", { button: 0 });
+    const beforeOpen = await api<GameView>("session_view", { p_id: room.id });
+    expect(beforeOpen.buzzWinner).toBeNull();
+    expect(buzzRequests).toBe(0);
     await page.getByRole("button", { name: "Mở BUZZ", exact: true }).click();
     await expect(bell).toBeEnabled({ timeout: 3000 });
+    // Reproduce a tab kept open across the update: its first request lacks the window ID.
+    let oldClient = true;
+    await player.route("**/api/command/", async (route) => {
+      const payload = route.request().postDataJSON();
+      if (oldClient && payload.command === "buzz_submit") {
+        oldClient = false;
+        delete payload.args.p_buzz_id;
+        await route.continue({ postData: JSON.stringify(payload) });
+      } else await route.continue();
+    });
+    const outdatedResponse = player.waitForResponse(
+      (r) => r.url().includes("/api/command/") && r.status() === 409,
+    );
+    await bell.click();
+    expect((await (await outdatedResponse).json()).code).toBe(
+      "BUZZ_CLIENT_OUTDATED",
+    );
+    await expect(player.locator(".notice.error")).toContainText("Tải lại trang");
+    expect(
+      (await api<GameView>("session_view", { p_id: room.id })).buzzWinner,
+    ).toBeNull();
+    await player
+      .getByRole("button", { name: "Tải lại màn chơi", exact: true })
+      .click();
+    await expect(bell).toBeEnabled();
+    expect(
+      await player.evaluate(
+        (id) => localStorage.getItem(`earthplay.player:${id}`),
+        room.id,
+      ),
+    ).toBe(token);
+    expect(
+      (await api<GameView>("session_view", { p_id: room.id })).buzzWinner,
+    ).toBeNull();
     const rect = await bell.boundingBox();
     await player.mouse.move(
       rect!.x + rect!.width / 2,

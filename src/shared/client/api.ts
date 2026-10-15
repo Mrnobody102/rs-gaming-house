@@ -9,6 +9,15 @@ export async function getConfig(): Promise<Config> {
   if (!response.ok) throw new Error("Không kết nối được.");
   return response.json();
 }
+export class CommandError extends Error {
+  constructor(
+    message: string,
+    public readonly code?: string,
+  ) {
+    super(message);
+    this.name = "CommandError";
+  }
+}
 export async function command<T>(
   name: string,
   args: object = {},
@@ -23,7 +32,8 @@ export async function command<T>(
     cache: "no-store",
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(data.error || "Không thực hiện được.");
+  if (!response.ok)
+    throw new CommandError(data.error || "Không thực hiện được.", data.code);
   return data;
 }
 export async function login(passcode: string, confirmation?: string) {

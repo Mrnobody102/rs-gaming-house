@@ -18,11 +18,26 @@ export async function POST(request: NextRequest) {
       );
     const name = input.command as Command;
     const parsed = commands[name].safeParse(input.args || {});
-    if (!parsed.success)
+    if (!parsed.success) {
+      const issue = parsed.error.issues[0];
+      if (name === "buzz_submit" && issue.path[0] === "p_buzz_id")
+        return NextResponse.json(
+          {
+            error:
+              "Màn chơi chưa cập nhật mã lượt chuông. Tải lại trang rồi bấm BUZZ.",
+            code: "BUZZ_CLIENT_OUTDATED",
+          },
+          { status: 409, headers: { "Cache-Control": "no-store" } },
+        );
       return NextResponse.json(
-        { error: parsed.error.issues[0].message },
+        {
+          error: /[À-ỹ]/u.test(issue.message)
+            ? issue.message
+            : "Dữ liệu chưa hợp lệ. Tải lại trang rồi thử lại.",
+        },
         { status: 400 },
       );
+    }
     const data = await execute(name, parsed.data, request);
     return NextResponse.json(data, {
       headers: { "Cache-Control": "no-store" },
