@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1200">
+<rect width="1200" height="1200" fill="#235c65"/>
+<path d="M0 0H900L930 160 800 280 890 430 765 580 820 720 665 840 695 1000 550 1200H0Z" fill="#bfce78"/>
+<path d="M0 0H370L430 170 270 330 380 530 170 700 240 920 0 1060Z" fill="#587e4e"/>
+<path d="M510-80C370 150 700 250 520 420S480 670 680 750 400 990 610 1290" fill="none" stroke="#8dd4df" stroke-width="110"/>
+<path d="M545 505Q630 370 805 385M550 1070Q740 1020 740 870" fill="none" stroke="#8dd4df" stroke-width="44"/>
+<path d="M25 710L350 800 300 1005 0 925Z" fill="#e8bb65"/>
+<path d="M580 65L795 35 850 170 710 235Z" fill="#e8bb65"/>
+<path d="M250 410L320 345 390 420 345 490Z" fill="#eff1cf"/>
+<path d="M865 720L970 690 1030 770 950 860 880 820Z" fill="#c3d58d"/>
+<path d="M0 1130L215 1060M35 155L205 240M675 260L775 215" stroke="#f8e3ac" stroke-width="18" fill="none"/>
+<path d="M990 60q70 60 0 120M1035 1060q85 40 100-50" stroke="#4a8991" stroke-width="18" fill="none"/>
+<rect x="175" y="780" width="150" height="140" rx="8" fill="#b7b2a0"/>
+<path d="M190 800h50v40h-50zm65 0h50v40h-50zm-65 55h50v40h-50zm65 0h50v40h-50z" fill="#eef0d8" stroke="#66746b" stroke-width="5"/>
+</svg>

@@ -1,0 +1,2 @@
+update public.questions set body=jsonb_set(body,'{difficulty}',to_jsonb(case when id::text in ('7b0c6f11-5dd8-4d44-8ba7-b03a2bea1101','7b0c6f11-5dd8-4d44-8ba7-b03a2bea1102','7b0c6f11-5dd8-4d44-8ba7-b03a2bea1103') then 'easy'::text else 'medium'::text end)) where not body ? 'difficulty';
+alter table public.questions add constraint questions_difficulty check(coalesce(body->>'difficulty','medium') in ('easy','medium','hard'));

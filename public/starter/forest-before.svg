@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<rect width="1200" height="800" fill="#668859"/>
+<ellipse cx="30" cy="20" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="200" cy="20" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="370" cy="20" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="540" cy="20" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="710" cy="20" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="880" cy="20" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="1050" cy="20" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="1220" cy="20" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="30" cy="170" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="200" cy="170" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="370" cy="170" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="540" cy="170" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="710" cy="170" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="880" cy="170" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="1050" cy="170" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="1220" cy="170" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="30" cy="320" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="200" cy="320" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="370" cy="320" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="540" cy="320" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="710" cy="320" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="880" cy="320" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="1050" cy="320" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="1220" cy="320" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="30" cy="470" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="200" cy="470" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="370" cy="470" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="540" cy="470" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="710" cy="470" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="880" cy="470" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="1050" cy="470" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="1220" cy="470" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="30" cy="620" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="200" cy="620" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="370" cy="620" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="540" cy="620" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="710" cy="620" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="880" cy="620" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="1050" cy="620" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="1220" cy="620" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="30" cy="770" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="200" cy="770" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="370" cy="770" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="540" cy="770" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="710" cy="770" rx="100" ry="90" fill="#376b4a"/>
+<ellipse cx="880" cy="770" rx="100" ry="90" fill="#447d54"/>
+<ellipse cx="1050" cy="770" rx="100" ry="90" fill="#51885d"/>
+<ellipse cx="1220" cy="770" rx="100" ry="90" fill="#376b4a"/>
+<path d="M570 -50C750 190 470 240 600 400S540 660 650 850" fill="none" stroke="#85c5c7" stroke-width="65"/>
+<path d="M0 400H1200" stroke="#e9d59f" stroke-width="25"/>
+</svg>

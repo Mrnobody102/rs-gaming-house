@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800">
+<rect width="1200" height="800" fill="#cbd68b"/>
+<rect x="18" y="15" width="210" height="170" rx="5" fill="#679955" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="248" y="15" width="210" height="170" rx="5" fill="#8fb967" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="478" y="15" width="210" height="170" rx="5" fill="#d8bb66" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="708" y="15" width="210" height="170" rx="5" fill="#a8c477" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="938" y="15" width="210" height="170" rx="5" fill="#679955" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="18" y="205" width="210" height="170" rx="5" fill="#8fb967" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="248" y="205" width="210" height="170" rx="5" fill="#d8bb66" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="478" y="205" width="210" height="170" rx="5" fill="#a8c477" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="708" y="205" width="210" height="170" rx="5" fill="#679955" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="938" y="205" width="210" height="170" rx="5" fill="#8fb967" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="18" y="395" width="210" height="170" rx="5" fill="#d8bb66" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="248" y="395" width="210" height="170" rx="5" fill="#a8c477" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="478" y="395" width="210" height="170" rx="5" fill="#679955" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="708" y="395" width="210" height="170" rx="5" fill="#8fb967" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="938" y="395" width="210" height="170" rx="5" fill="#d8bb66" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="18" y="585" width="210" height="170" rx="5" fill="#a8c477" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="248" y="585" width="210" height="170" rx="5" fill="#679955" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="478" y="585" width="210" height="170" rx="5" fill="#8fb967" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="708" y="585" width="210" height="170" rx="5" fill="#d8bb66" stroke="#e4dfa3" stroke-width="8"/>
+<rect x="938" y="585" width="210" height="170" rx="5" fill="#a8c477" stroke="#e4dfa3" stroke-width="8"/>
+<path d="M650 -40 C470 170 700 270 580 420 S600 650 520 850" fill="none" stroke="#8dd4df" stroke-width="90"/>
+<path d="M0 400H1200" stroke="#f7e6b5" stroke-width="20"/>
+</svg>
