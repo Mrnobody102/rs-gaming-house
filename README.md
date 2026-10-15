@@ -16,7 +16,7 @@ Dev dùng `.next-dev`, build production dùng `.next`, để chạy kiểm tra b
 - Người chơi: http://localhost:3100/ — nhập mã phòng và tên.
 - MC: http://localhost:3100/admin/ — mật mã bản thử `earthplay` nếu chưa đặt `ADMIN_PASSCODE`.
 - Trang quản trị có nút **Tạo phòng**: chọn bộ đề hoặc từng câu, sắp thứ tự rồi **Tạo phòng**. Nút **Tạo phòng chơi thử** chuẩn bị một vòng trả lời trực tiếp qua BUZZ.
-- Phòng chờ hiển thị mã, QR và tên người tham gia. MC bấm **Bắt đầu**; **Mở trình chiếu** mở tab chỉ hiển thị nội dung, không có nút điều khiển.
+- Phòng chờ hiển thị mã, QR và tên người tham gia. MC bấm **Bắt đầu**; **Mở trình chiếu** mở tab ảnh lớn. Trên máy đã đăng nhập MC, tab này có nút chấm điểm, mở chuông và chuyển câu; có thể ẩn/hiện thanh điều khiển hoặc phóng toàn màn hình riêng khung game. Link trình chiếu mở trên máy chưa đăng nhập chỉ có quyền xem.
 
 Điện thoại cần dùng cùng mạng Wi-Fi với laptop. QR tự chọn địa chỉ LAN; có thể sửa **Địa chỉ cho người chơi** ngay ở phòng chờ nếu máy có nhiều adapter mạng. Cho phép Node qua Windows Firewall nếu máy chặn kết nối LAN. `localhost` trên điện thoại trỏ về chính điện thoại.
 

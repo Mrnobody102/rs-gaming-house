@@ -3,9 +3,12 @@ import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ArrowRight,
+  ArrowLeft,
   Check,
   Eye,
   Maximize,
+  Minimize,
+  SlidersHorizontal,
   Send,
   Trophy,
   Users,
@@ -96,6 +99,15 @@ function LiveGame({
   const updateTiles = useCallback((value: number[]) => setTiles(value), []);
   const actionPending = useRef(false);
   const [needsReload, setNeedsReload] = useState(false);
+  const [showControls, setShowControls] = useState(true);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const screenRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const update = () =>
+      setIsFullscreen(document.fullscreenElement === screenRef.current);
+    document.addEventListener("fullscreenchange", update);
+    return () => document.removeEventListener("fullscreenchange", update);
+  }, []);
   useEffect(() => {
     if (joinBase) setBase(joinBase);
     else
@@ -137,8 +149,9 @@ function LiveGame({
   }
   async function fullscreen() {
     try {
-      if (document.fullscreenElement) await document.exitFullscreen();
-      else await document.documentElement.requestFullscreen();
+      if (document.fullscreenElement === screenRef.current)
+        await document.exitFullscreen();
+      else await screenRef.current?.requestFullscreen();
     } catch {
       setActionError("Bạn có thể dùng F11 để mở toàn màn hình.");
     }
@@ -163,6 +176,7 @@ function LiveGame({
     reveal = ["result", "leaderboard", "finished"].includes(g.phase),
     scoreboard = g.phase === "leaderboard" || g.phase === "finished",
     eo = usesBuzz(q);
+  const canControl = (host || projector) && g.host;
   const seconds = g.deadline
     ? Math.max(0, Math.ceil((Date.parse(g.deadline) - now - offset) / 1000))
     : q.seconds;
@@ -186,14 +200,79 @@ function LiveGame({
   }
   const joinUrl = `${base.replace(/\/$/, "")}/?code=${g.code}`,
     me = g.standings.find((p) => p.id === g.myId);
+  const buzzPanel = eo && !reveal && (
+    <div className="buzz-area">
+      {g.buzzWinner ? (
+        <p className="buzz-winner">
+          <strong>{g.buzzWinner.name}</strong> giành quyền trả lời
+          {g.buzzWinner.elapsedMs != null && (
+            <small className="buzz-time">
+              {(g.buzzWinner.elapsedMs / 1000).toFixed(3)} s
+            </small>
+          )}
+          {g.buzzWinner.hopeStar && (
+            <span className="winner-star">
+              <Star size={16} fill="currentColor" /> ×2
+            </span>
+          )}
+        </p>
+      ) : canAnswer ? (
+        <button
+          className={`buzz-button ${g.buzzOpen ? "open" : ""}`}
+          disabled={locked || !g.buzzOpen || !g.buzzId}
+          onPointerDown={(event) => {
+            if (event.button === 0) buzz();
+          }}
+          onClick={(event) => {
+            if (event.detail === 0) buzz();
+          }}
+        >
+          BUZZ
+        </button>
+      ) : (
+        <p className="waiting-label">
+          {g.buzzOpen ? "BUZZ đang mở" : "BUZZ chưa mở"}
+        </p>
+      )}
+      {canAnswer && g.buzzWinner?.id === g.myId && (
+        <p>Bạn được quyền trả lời.</p>
+      )}
+    </div>
+  );
   return (
-    <div className={`game-screen ${projector ? "projector" : ""}`}>
+    <div
+      ref={screenRef}
+      className={`game-screen ${projector ? "projector" : ""} ${canControl ? "is-controller" : "is-player"} ${projector && canControl && !showControls ? "controls-hidden" : ""}`}
+    >
       <header className="game-header">
         <Brand small />
         <span className="game-position">
           {g.tiebreak?.active ? "Câu dự bị" : `Câu ${g.index + 1} / ${g.total}`}
         </span>
         <div className="game-header-end">
+          {projector && canControl && (
+            <>
+              <Link
+                className="presentation-tool"
+                href={`/admin/sessions/${id}/`}
+                title="Về màn điều khiển MC"
+              >
+                <ArrowLeft size={17} />
+                <span>Quản trị</span>
+              </Link>
+              <button
+                className="presentation-tool"
+                aria-label={showControls ? "Ẩn điều khiển" : "Hiện điều khiển"}
+                aria-pressed={showControls}
+                onClick={() => setShowControls((v) => !v)}
+              >
+                <SlidersHorizontal size={17} />
+                <span>
+                  {showControls ? "Ẩn điều khiển" : "Hiện điều khiển"}
+                </span>
+              </button>
+            </>
+          )}
           <span className="room-code">{g.code}</span>
           <span className="player-count">
             <Users size={16} />
@@ -209,11 +288,11 @@ function LiveGame({
             </span>
           )}
           <button
-            className="icon-button"
-            aria-label="Toàn màn hình"
+            className="icon-button fullscreen-toggle"
+            aria-label={isFullscreen ? "Thoát toàn màn hình" : "Toàn màn hình"}
             onClick={fullscreen}
           >
-            <Maximize size={19} />
+            {isFullscreen ? <Minimize size={19} /> : <Maximize size={19} />}
           </button>
         </div>
       </header>
@@ -295,7 +374,7 @@ function LiveGame({
           finished={g.phase === "finished"}
           pending={g.tiebreak?.pending}
           controls={
-            host && g.tiebreak?.pending ? (
+            canControl && g.tiebreak?.pending ? (
               <TiebreakControls game={g} busy={busy} onRun={run} />
             ) : undefined
           }
@@ -425,7 +504,7 @@ function LiveGame({
             <EarthStage
               question={q}
               reveal={reveal}
-              interactive={host}
+              interactive={canControl && !projector}
               roundId={g.roundId}
               guess={g.guess}
               onGuess={(point) =>
@@ -437,45 +516,9 @@ function LiveGame({
               }
             />
           )}
-          {eo && !reveal && (
-            <div className="buzz-area">
-              {g.buzzWinner ? (
-                <p className="buzz-winner">
-                  <strong>{g.buzzWinner.name}</strong> giành quyền trả lời
-                  {g.buzzWinner.elapsedMs != null && (
-                    <small className="buzz-time">
-                      {(g.buzzWinner.elapsedMs / 1000).toFixed(3)} s
-                    </small>
-                  )}
-                  {g.buzzWinner.hopeStar && (
-                    <span className="winner-star">
-                      <Star size={16} fill="currentColor" /> ×2
-                    </span>
-                  )}
-                </p>
-              ) : canAnswer ? (
-                <button
-                  className={`buzz-button ${g.buzzOpen ? "open" : ""}`}
-                  disabled={locked || !g.buzzOpen || !g.buzzId}
-                  onPointerDown={(event) => {
-                    if (event.button === 0) buzz();
-                  }}
-                  onClick={(event) => {
-                    if (event.detail === 0) buzz();
-                  }}
-                >
-                  BUZZ
-                </button>
-              ) : (
-                <p className="waiting-label">
-                  {g.buzzOpen ? "BUZZ đang mở" : "BUZZ chưa mở"}
-                </p>
-              )}
-              {canAnswer && g.buzzWinner?.id === g.myId && (
-                <p>Bạn được quyền trả lời.</p>
-              )}
-            </div>
-          )}
+          {!canAnswer &&
+            (!canControl || (projector && !showControls)) &&
+            buzzPanel}
           {q.hints?.length > 0 && <GameHints hints={q.hints} />}
           {canAnswer && g.myAnswer && (
             <p
@@ -503,16 +546,21 @@ function LiveGame({
           )}
         </main>
       )}
-      {host ? (
+      {canAnswer && g.phase === "question" && !scoreboard && eo && (
+        <div className="buzz-dock">{buzzPanel}</div>
+      )}
+      {canControl && (!projector || showControls) ? (
         <footer className="host-controls">
           <div className="host-secondary">
             {g.phase === "question" ? (
               <>
-                <span>
-                  {eo
-                    ? "Giành quyền trả lời"
-                    : `${g.answered} / ${g.count} đã trả lời`}
-                </span>
+                {eo ? (
+                  buzzPanel
+                ) : (
+                  <span>
+                    {g.answered} / {g.count} đã trả lời
+                  </span>
+                )}
                 {g.hintCount < g.hintTotal && (
                   <button
                     className="button secondary small"

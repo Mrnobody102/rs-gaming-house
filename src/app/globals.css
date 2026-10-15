@@ -3276,3 +3276,147 @@ fieldset {
     font-size: 12px;
   }
 }
+
+/* Keep the question compact and give its image the available screen area. */
+.game-screen .game-header {
+  height: 52px;
+  gap: 18px;
+}
+.game-screen .question-stage {
+  max-width: 1760px;
+  margin: 0 auto;
+  justify-content: flex-start;
+  padding: 12px 24px;
+  gap: 12px;
+}
+.game-screen .question-heading {
+  flex-shrink: 0;
+}
+.game-screen .question-heading h1 {
+  max-width: 1400px;
+  font-size: clamp(22px, 2.2vw, 36px);
+  line-height: 1.2;
+  letter-spacing: normal;
+  margin-top: 6px;
+}
+.game-screen .earth-stage {
+  max-width: none;
+  flex-shrink: 0;
+}
+.game-screen .image-viewer,
+.game-screen .comparison {
+  margin-inline: auto;
+}
+.buzz-dock {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  padding: 8px 18px;
+  background: #182820;
+}
+.game-screen .player-footer {
+  padding-block: 10px;
+}
+.game-screen .host-controls {
+  padding: 10px 20px;
+  min-height: 66px;
+}
+.host-controls .buzz-area {
+  text-align: left;
+}
+.host-controls .buzz-winner {
+  font-size: 14px;
+}
+.host-controls .buzz-time {
+  display: inline;
+  margin: 0 0 0 8px;
+}
+.projector .game-header {
+  flex-wrap: wrap;
+  height: auto;
+  min-height: 52px;
+  padding-block: 8px;
+  gap: 10px;
+}
+.presentation-tool {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 34px;
+  padding: 5px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.presentation-tool:hover {
+  background: #ffffff10;
+}
+.game-header-end > .fullscreen-toggle {
+  display: grid;
+}
+.game-screen:fullscreen {
+  height: 100svh !important;
+  min-height: 100svh !important;
+  width: 100%;
+  overflow: hidden;
+}
+@media (min-width: 681px) {
+  .game-screen {
+    container-type: size;
+    --media-height: calc(100cqh - 270px);
+  }
+  .game-screen.is-controller {
+    --media-height: calc(100cqh - 220px);
+  }
+  .game-screen.projector:not(.is-controller),
+  .game-screen.projector.controls-hidden {
+    --media-height: calc(100cqh - 190px);
+  }
+  .game-screen .image-viewer {
+    max-width: min(
+      100%,
+      calc(var(--media-height) * var(--image-ratio, 1.42857))
+    );
+  }
+  .game-screen .comparison {
+    max-width: min(
+      100%,
+      calc((var(--media-height) - 60px) * var(--image-ratio, 1.42857))
+    );
+  }
+  .game-screen .question-image {
+    max-height: min(56cqh, var(--media-height));
+  }
+}
+@media (max-width: 900px) {
+  .presentation-tool span {
+    display: none;
+  }
+}
+@media (max-width: 680px) {
+  .game-screen .game-header {
+    min-height: 52px;
+    height: auto;
+    padding: 8px 14px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .game-screen .question-stage {
+    padding: 12px;
+  }
+  .game-screen .question-heading h1 {
+    font-size: 23px;
+  }
+  .game-screen .earth-stage {
+    width: 100%;
+  }
+  .game-screen .host-controls {
+    padding: 10px 12px;
+  }
+  .buzz-dock {
+    position: sticky;
+    bottom: 0;
+    z-index: 4;
+    border-top: 1px solid var(--line);
+  }
+}

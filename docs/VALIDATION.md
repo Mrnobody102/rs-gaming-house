@@ -8,6 +8,8 @@ Kiểm tra chuông trắc nghiệm mặc định: không chọn đáp án trực
 
 Kiểm tra nâng cấp database đã ghi nhận bản 012 sớm nhưng thiếu cột/hàm mã lượt chuông: migration 013 sửa phòng đang mở, giữ người chơi, nội dung và điểm; khởi tạo lại không đổi mã lượt hợp lệ. Health check từ chối báo sẵn sàng nếu schema chuông thiếu cột, hàm nhận mã lượt hoặc trường mã lượt trong trạng thái.
 
+Màn trình chiếu được kiểm tra ở 1280/1920 px: ảnh lớn hơn giới hạn cũ theo kích thước viewport và không che thanh điều khiển; MC có thể bắt đầu, mở chuông, công bố, xem bảng điểm, chuyển câu và kết thúc từ trình chiếu. Có kiểm tra ẩn/hiện điều khiển, toàn màn hình riêng game, link xem không có quyền chuyển câu và nút BUZZ vẫn nhìn thấy trên điện thoại.
+
 `npm run test:e2e`: trình duyệt Edge trên Windows hoặc Chromium trên Linux. Chạy server production riêng cổng 3201 với database/media thử riêng. Kiểm tra giao diện tham gia, mật mã admin, phòng có QR, nhiều browser độc lập, các kiểu chơi, chấm điểm và form soạn nội dung. Ảnh chụp nằm trong `artifacts/`, trace lỗi trong `test-results/`.
 
 Có thêm server production cổng 3202 không đặt mật mã sẵn để kiểm tra setup lần đầu, giữ mật mã sau đăng xuất, tạo phòng chơi thử, quản lý câu hỏi theo game, lọc độ khó và phân trang 10/20/50 câu. Form tọa độ/biến động được kiểm tra với một ảnh và đáp án chữ, không cần tọa độ hay khoanh vùng. Có kiểm tra che đáp án/thông tin thêm trước công bố và ba gợi ý do MC mở.

@@ -1,5 +1,11 @@
 "use client";
-import { useRef, useState, useEffect, type PointerEvent } from "react";
+import {
+  useRef,
+  useState,
+  useEffect,
+  type PointerEvent,
+  type CSSProperties,
+} from "react";
 import { Minus, Plus, RotateCcw } from "lucide-react";
 import type {
   Coordinate,
@@ -84,7 +90,16 @@ export function ImageViewer({
     );
   };
   return (
-    <div className="image-viewer">
+    <div
+      className="image-viewer"
+      style={
+        {
+          "--image-ratio": bounds
+            ? (bounds.east - bounds.west) / (bounds.north - bounds.south)
+            : 10 / 7,
+        } as CSSProperties
+      }
+    >
       <svg
         style={
           bounds
@@ -273,7 +288,10 @@ export function CompareImages({
   const [split, setSplit] = useState(50),
     [ratio, setRatio] = useState(10 / 7);
   return (
-    <div className="comparison">
+    <div
+      className="comparison"
+      style={{ "--image-ratio": ratio } as CSSProperties}
+    >
       <div
         className="comparison-images"
         style={{ aspectRatio: ratio }}
