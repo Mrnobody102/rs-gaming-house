@@ -13,7 +13,7 @@ Nguồn: `questions.pptx`. Bản nội dung dùng trong app: `src/content/worksh
 | 6 | 8 + ghi chú | Văn Miếu – Quốc Tử Giám; giữ khung vàng và 3 gợi ý | 300 |
 | 7 | 9, 10, 14 | Huế; ảnh đen trắng → gợi ý ảnh màu cũ ở slide 14 → ảnh hiện tại ở slide 10 khi mở đáp án | 400 |
 | 8 | 11–12 | TechnoPark, Ocean Park 1, ảnh năm 2018; đáp án ô 16. Slide 12 là ảnh hiện tại dùng giải thích | 400 |
-| 9 | 13 | Ghi chép thực địa tương ứng ảnh A; đã xoay ảnh sổ để đọc ngang, giữ A/B/C | 400 |
+| 9 | 13 | Ghi chép thực địa tương ứng ảnh A; giữ đúng vùng crop trang sổ, góc xoay, tỷ lệ và vị trí A/B/C như PowerPoint | 400 |
 | 10 | 15 (ẩn) | Hồ Ba Bể | 300 |
 | 11 | 16 (ẩn) | Huế | 300 |
 | 12 | 17 (ẩn) | Thành cổ Quảng Trị; giữ khung vàng | 300 |
