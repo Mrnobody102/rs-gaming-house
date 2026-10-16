@@ -1,0 +1,582 @@
+{
+  "origin": "https://rs-gaming-house.onrender.com",
+  "at": "2026-10-16T03:03:48.285Z",
+  "players": 50,
+  "waves": [
+    {
+      "round": 1,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 8191,
+      "mcVisibleMs": 9516,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 4849,
+        "p95Ms": 6777,
+        "maxMs": 7384
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 8817,
+      "mcVisibleMs": 7096,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 3822,
+        "p95Ms": 5184,
+        "maxMs": 5303
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 8142,
+      "mcVisibleMs": 5780,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 4068,
+        "p95Ms": 5414,
+        "maxMs": 5703
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 4,
+      "contenders": 47,
+      "winners": 1,
+      "batchMs": 8210,
+      "mcVisibleMs": 6138,
+      "openingDelivery": {
+        "count": 47,
+        "p50Ms": 4380,
+        "p95Ms": 5950,
+        "maxMs": 5996
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 5,
+      "contenders": 46,
+      "winners": 1,
+      "batchMs": 6382,
+      "mcVisibleMs": 6703,
+      "openingDelivery": {
+        "count": 46,
+        "p50Ms": 11046,
+        "p95Ms": 13451,
+        "maxMs": 14145
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 7078,
+      "mcVisibleMs": 3439,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 4080,
+        "p95Ms": 5566,
+        "maxMs": 5878
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 6243,
+      "mcVisibleMs": 7987,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 4017,
+        "p95Ms": 5325,
+        "maxMs": 5438
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 9257,
+      "mcVisibleMs": 7877,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 4324,
+        "p95Ms": 6208,
+        "maxMs": 6365
+      }
+    }
+  ],
+  "bursts": [
+    {
+      "round": 1,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 47,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 5,
+      "contenders": 46,
+      "responses": 46,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 43,
+      "failures": 4,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    }
+  ],
+  "requests": {
+    "bank_list": {
+      "count": 1,
+      "p50Ms": 698,
+      "p95Ms": 698,
+      "maxMs": 698
+    },
+    "session_create": {
+      "count": 1,
+      "p50Ms": 754,
+      "p95Ms": 754,
+      "maxMs": 754
+    },
+    "session_join": {
+      "count": 50,
+      "p50Ms": 1713,
+      "p95Ms": 2122,
+      "maxMs": 2722
+    },
+    "session_view": {
+      "count": 3005,
+      "p50Ms": 2236,
+      "p95Ms": 5757,
+      "maxMs": 15140
+    },
+    "session_control": {
+      "count": 3,
+      "p50Ms": 3191,
+      "p95Ms": 3654,
+      "maxMs": 3654
+    },
+    "buzz_control": {
+      "count": 9,
+      "p50Ms": 2202,
+      "p95Ms": 8809,
+      "maxMs": 8809
+    },
+    "buzz_submit": {
+      "count": 434,
+      "p50Ms": 3283,
+      "p95Ms": 6989,
+      "maxMs": 15013
+    },
+    "buzz_grade": {
+      "count": 16,
+      "p50Ms": 1850,
+      "p95Ms": 3860,
+      "maxMs": 3860
+    },
+    "session_delete": {
+      "count": 1,
+      "p50Ms": 1622,
+      "p95Ms": 1622,
+      "maxMs": 1622
+    }
+  },
+  "failures": [
+    {
+      "command": "buzz_submit",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    }
+  ],
+  "cleanup": {},
+  "joinBatchMs": 2724,
+  "streamFailures": [
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError"
+  ],
+  "sseOpened": 0,
+  "mode": "polling fallback",
+  "passed": false,
+  "error": "BUZZ request failures\n\n43 !== 47\n",
+  "clientErrors": [
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout",
+    "The operation was aborted due to timeout"
+  ],
+  "deploymentContext": {
+    "webPlan": "1 CPU / 2 GB",
+    "source": "User confirmed new deployment Live during test setup",
+    "databasePlan": "Not changed or verified during this test",
+    "networkVia": "Websense Web Security Gateway v7.6 (observed on separate config and health responses)"
+  }
+}

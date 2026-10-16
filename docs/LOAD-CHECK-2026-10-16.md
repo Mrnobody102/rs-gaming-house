@@ -4,6 +4,19 @@ Chưa đủ bằng chứng để dùng BUZZ cho 50 người một cách ổn đ�
 
 ## Kết quả đã đo
 
+### Sau khi nâng Web lên 1 CPU / 2 GB
+
+Ngày 16/10, bắt đầu lúc 10:03 giờ Việt Nam/Thái Lan; người dùng xác nhận deployment mới đã Live trong lúc chuẩn bị. Cùng kịch bản 50 người, không thay luật game:
+
+- 50/50 người vào phòng; 0/50 SSE mở được từ máy đo, nên chạy polling dự phòng.
+- Hoàn thành 8 lượt, mỗi lượt chỉ một người thắng, chấm lặp giữ nguyên điểm. MC hiện kết quả trong 3,439–9,516 giây; trung vị 6,703 giây, p95 9,516 giây. Đây là 8 mẫu, ít hơn lần đo trước.
+- Lượt 9 có 4/47 request BUZZ timeout sau 15 giây. 43 phản hồi còn lại thống nhất với người thắng lưu trên server. Bài đo dừng và xóa phòng thử, không đạt mục tiêu 2 giây.
+- Header `Via` trên request config/health xác nhận đường mạng kiểm tra qua `Websense Web Security Gateway v7.6`. Chưa xác định proxy, database hay app là nguyên nhân chính; không kết luận gói mới chậm hơn chỉ từ hai lượt đo khác thời điểm.
+
+[Dữ liệu gói 1 CPU / 2 GB](load-results/2026-10-16-render-1cpu-50.json). Chưa nâng thêm tài nguyên: cần đối chiếu bằng đường mạng khác, xem CPU/RAM web và database đúng lúc đo, và kiểm tra Internal Database URL. Test hiện tại không chứng minh được trải nghiệm 50 điện thoại tại sự kiện, cũng không chứng minh việc tăng Web CPU giải quyết được vấn đề.
+
+### Trước khi nâng
+
 | Môi trường                                                                   | Kết quả                                                                                                                                                                                 |
 | ---------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Production cục bộ, PostgreSQL 17 tạm, 60 người + 60 SSE + một trình duyệt MC | 20/20 lượt tranh chuông thành công. Mỗi lượt chỉ có một người thắng; chấm lặp không cộng thêm điểm. p95 thời gian hiện người thắng trên MC: 556 ms, lớn nhất 652 ms.                    |
