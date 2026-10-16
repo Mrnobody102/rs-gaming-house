@@ -17,12 +17,15 @@ assert(
 );
 const output = arg("--output", "artifacts/room-load.json");
 const allowPolling = process.argv.includes("--allow-polling");
+const maxMcMs = Number(arg("--max-mc-ms", "2000"));
+assert(Number.isFinite(maxMcMs) && maxMcMs > 0);
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 const report = {
   origin: base,
   at: new Date().toISOString(),
   players: count,
   waves: [],
+  bursts: [],
   requests: {},
   failures: [],
   cleanup: {},
@@ -294,7 +297,7 @@ try {
         .then(() => performance.now() - burst);
       // Keep the browser waiter handled if an HTTP request fails first.
       visible.catch(() => {});
-      const answers = await Promise.all(
+      const submissions = await Promise.allSettled(
         eligible.map((c) =>
           api("buzz_submit", {
             p_id: room.id,
@@ -304,6 +307,23 @@ try {
           }),
         ),
       );
+      const answers = submissions
+        .filter((result) => result.status === "fulfilled")
+        .map((result) => result.value);
+      const batchMs = Math.round(performance.now() - burst);
+      const authoritative = await api("session_view", { p_id: room.id }, true);
+      report.bursts.push({
+        round: round + 1,
+        attempt: attempt + 1,
+        contenders: eligible.length,
+        responses: answers.length,
+        failures: submissions.length - answers.length,
+        winnerConfirmed: Boolean(authoritative.buzzWinner?.id),
+        responsesAgree: answers.every(
+          (answer) => answer.buzzWinner?.id === authoritative.buzzWinner?.id,
+        ),
+      });
+      assert.equal(answers.length, eligible.length, "BUZZ request failures");
       const winners = new Set(answers.map((g) => g.buzzWinner?.id));
       assert.equal(winners.size, 1, "Multiple winners in the same opening");
       const winner = answers[0].buzzWinner?.id;
@@ -313,7 +333,7 @@ try {
         attempt: attempt + 1,
         contenders: eligible.length,
         winners: winners.size,
-        batchMs: Math.round(performance.now() - burst),
+        batchMs,
         mcVisibleMs: Math.round(await visible),
         openingDelivery: summary(notificationMs),
       };
@@ -398,7 +418,20 @@ try {
     clients.every((c) => !c.error),
     "Client connection errors occurred",
   );
-  report.passed = true;
+  report.logicPassed = true;
+  report.latency = {
+    targetMs: maxMcMs,
+    mcVisible: summary(report.waves.map((wave) => wave.mcVisibleMs)),
+    passed: report.waves.every(
+      (wave) =>
+        wave.mcVisibleMs <= maxMcMs && wave.openingDelivery.p95Ms <= maxMcMs,
+    ),
+  };
+  report.passed = report.latency.passed;
+  if (!report.passed) {
+    report.error = "Correct results, but latency exceeds the target";
+    process.exitCode = 1;
+  }
 } catch (error) {
   report.passed = false;
   report.error = error.message;

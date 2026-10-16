@@ -35,6 +35,10 @@ Nếu chuyển sang giơ tay giữa buổi, cho người chơi đóng màn đi�
 
 ## Kiểm tra lại
 
+Lượt đo tiếp theo trên Render đã hoàn thành 20 lượt chuông, tổng cộng 960 yêu cầu BUZZ: tất cả phản hồi thống nhất một người thắng mỗi lượt, chấm lặp không cộng thêm điểm. Tuy nhiên vẫn có 5 request lấy trạng thái bị timeout kết nối; màn MC hiện người thắng trong 1,704–8,738 giây (p95 8,143 giây), nên chưa đạt mục tiêu 2 giây. SSE vẫn không mở được từ mạng kiểm tra, cả Node lẫn một trình duyệt Edge riêng. Các phòng thử đã được xóa. [Dữ liệu lần đo lại](load-results/2026-10-16-render-50-recheck.json).
+
+Đã kiểm tra thêm trên trình duyệt cục bộ: cố tình giữ phản hồi BUZZ 2 giây rồi làm mất phản hồi sau khi server ghi nhận. Người chơi khác bấm sau và người thắng gửi lại vẫn nhận cùng kết quả; chấm lặp không cộng trùng, tải lại giữ đúng điểm. Không thay logic phân xử chuông của app trong lần kiểm tra này. [Cách chạy trên LAN](PLAY-ON-LAN.md).
+
 `scripts/check-room-load.mjs` tạo phòng riêng có tiền tố `LOAD CHECK`, chỉ đọc kho câu hỏi, rồi xóa các phòng do nó tạo trong khối `finally`. Không chạy lên phòng đang tổ chức. Cần bốn câu BUZZ có sẵn và trình duyệt Playwright/Edge đã cài.
 
 Đặt mật mã của server thử vào biến môi trường `LOAD_ADMIN_PASSCODE`, rồi chạy:
@@ -44,5 +48,7 @@ node --use-system-ca scripts/check-room-load.mjs --url https://rs-gaming-house.o
 ```
 
 Bỏ `--allow-polling` nếu cần kiểm tra bắt buộc SSE. Script vẫn ghi rõ số kết nối SSE và lỗi, kể cả khi cho phép polling. Báo cáo không chứa mật mã, cookie hoặc token người chơi. Chạy trên hosting thật tạo tải thực, nên dùng lúc không có người đang chơi.
+
+Script hiện kiểm tra cả ngưỡng trễ mặc định 2.000 ms: thời gian hiện tên trên MC và p95 nhận lượt mở của từng đợt. Có thể đổi bằng `--max-mc-ms`; kết quả đúng nhưng chậm vẫn trả mã lỗi, không báo đạt chỉ vì không có hai người thắng.
 
 Build production, 47 unit/integration test và 18 kịch bản trình duyệt đã qua sau bản sửa dọn phòng; một test PostgreSQL tùy chọn không chạy trong lệnh unit mặc định. Bài đo 60 người ở trên chạy riêng với PostgreSQL thật.

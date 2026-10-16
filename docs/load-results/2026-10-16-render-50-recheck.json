@@ -1,0 +1,624 @@
+{
+  "origin": "https://rs-gaming-house.onrender.com",
+  "at": "2026-10-16T02:44:22.545Z",
+  "players": 50,
+  "waves": [
+    {
+      "round": 1,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 11099,
+      "mcVisibleMs": 8143,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 4092,
+        "p95Ms": 7028,
+        "maxMs": 7289
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 9151,
+      "mcVisibleMs": 6677,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 2863,
+        "p95Ms": 4432,
+        "maxMs": 5631
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 19858,
+      "mcVisibleMs": 1704,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 4778,
+        "p95Ms": 6243,
+        "maxMs": 7306
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 4,
+      "contenders": 47,
+      "winners": 1,
+      "batchMs": 7426,
+      "mcVisibleMs": 6572,
+      "openingDelivery": {
+        "count": 47,
+        "p50Ms": 5194,
+        "p95Ms": 8323,
+        "maxMs": 8604
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 5,
+      "contenders": 46,
+      "winners": 1,
+      "batchMs": 13891,
+      "mcVisibleMs": 4458,
+      "openingDelivery": {
+        "count": 46,
+        "p50Ms": 4566,
+        "p95Ms": 8703,
+        "maxMs": 9611
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 9990,
+      "mcVisibleMs": 7386,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 4139,
+        "p95Ms": 5839,
+        "maxMs": 6112
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 9565,
+      "mcVisibleMs": 6854,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 5072,
+        "p95Ms": 7526,
+        "maxMs": 7542
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 8955,
+      "mcVisibleMs": 5142,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 3419,
+        "p95Ms": 5169,
+        "maxMs": 5295
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 4,
+      "contenders": 47,
+      "winners": 1,
+      "batchMs": 10840,
+      "mcVisibleMs": 3357,
+      "openingDelivery": {
+        "count": 47,
+        "p50Ms": 3691,
+        "p95Ms": 4816,
+        "maxMs": 6044
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 5,
+      "contenders": 46,
+      "winners": 1,
+      "batchMs": 7714,
+      "mcVisibleMs": 7003,
+      "openingDelivery": {
+        "count": 46,
+        "p50Ms": 6463,
+        "p95Ms": 9807,
+        "maxMs": 10369
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 9753,
+      "mcVisibleMs": 3126,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 3441,
+        "p95Ms": 5909,
+        "maxMs": 6216
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 8290,
+      "mcVisibleMs": 5276,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 3658,
+        "p95Ms": 4985,
+        "maxMs": 5283
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 9437,
+      "mcVisibleMs": 6683,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 4633,
+        "p95Ms": 7926,
+        "maxMs": 7987
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 4,
+      "contenders": 47,
+      "winners": 1,
+      "batchMs": 8213,
+      "mcVisibleMs": 5342,
+      "openingDelivery": {
+        "count": 47,
+        "p50Ms": 4074,
+        "p95Ms": 6227,
+        "maxMs": 7504
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 5,
+      "contenders": 46,
+      "winners": 1,
+      "batchMs": 9641,
+      "mcVisibleMs": 5852,
+      "openingDelivery": {
+        "count": 46,
+        "p50Ms": 4271,
+        "p95Ms": 6709,
+        "maxMs": 6890
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 1,
+      "contenders": 50,
+      "winners": 1,
+      "batchMs": 7699,
+      "mcVisibleMs": 5859,
+      "openingDelivery": {
+        "count": 50,
+        "p50Ms": 3611,
+        "p95Ms": 6077,
+        "maxMs": 6185
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 2,
+      "contenders": 49,
+      "winners": 1,
+      "batchMs": 9078,
+      "mcVisibleMs": 7790,
+      "openingDelivery": {
+        "count": 49,
+        "p50Ms": 3607,
+        "p95Ms": 5490,
+        "maxMs": 5768
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 3,
+      "contenders": 48,
+      "winners": 1,
+      "batchMs": 8792,
+      "mcVisibleMs": 4030,
+      "openingDelivery": {
+        "count": 48,
+        "p50Ms": 4780,
+        "p95Ms": 7940,
+        "maxMs": 12138
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 4,
+      "contenders": 47,
+      "winners": 1,
+      "batchMs": 9291,
+      "mcVisibleMs": 8738,
+      "openingDelivery": {
+        "count": 47,
+        "p50Ms": 3485,
+        "p95Ms": 5094,
+        "maxMs": 5484
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 5,
+      "contenders": 46,
+      "winners": 1,
+      "batchMs": 9857,
+      "mcVisibleMs": 7919,
+      "openingDelivery": {
+        "count": 46,
+        "p50Ms": 2630,
+        "p95Ms": 4350,
+        "maxMs": 5387
+      }
+    }
+  ],
+  "bursts": [
+    {
+      "round": 1,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 47,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 1,
+      "attempt": 5,
+      "contenders": 46,
+      "responses": 46,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 47,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 2,
+      "attempt": 5,
+      "contenders": 46,
+      "responses": 46,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 3,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 3,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 3,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 3,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 47,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 3,
+      "attempt": 5,
+      "contenders": 46,
+      "responses": 46,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 4,
+      "attempt": 1,
+      "contenders": 50,
+      "responses": 50,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 4,
+      "attempt": 2,
+      "contenders": 49,
+      "responses": 49,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 4,
+      "attempt": 3,
+      "contenders": 48,
+      "responses": 48,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 4,
+      "attempt": 4,
+      "contenders": 47,
+      "responses": 47,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    },
+    {
+      "round": 4,
+      "attempt": 5,
+      "contenders": 46,
+      "responses": 46,
+      "failures": 0,
+      "winnerConfirmed": true,
+      "responsesAgree": true
+    }
+  ],
+  "requests": {
+    "bank_list": {
+      "count": 1,
+      "p50Ms": 265,
+      "p95Ms": 265,
+      "maxMs": 265
+    },
+    "session_create": {
+      "count": 2,
+      "p50Ms": 205,
+      "p95Ms": 277,
+      "maxMs": 277
+    },
+    "session_join": {
+      "count": 100,
+      "p50Ms": 1093,
+      "p95Ms": 2412,
+      "maxMs": 2458
+    },
+    "session_view": {
+      "count": 6332,
+      "p50Ms": 2203,
+      "p95Ms": 5503,
+      "maxMs": 12585
+    },
+    "session_control": {
+      "count": 9,
+      "p50Ms": 2761,
+      "p95Ms": 3883,
+      "maxMs": 3883
+    },
+    "buzz_control": {
+      "count": 20,
+      "p50Ms": 1995,
+      "p95Ms": 3068,
+      "maxMs": 3637
+    },
+    "buzz_submit": {
+      "count": 960,
+      "p50Ms": 3903,
+      "p95Ms": 7670,
+      "maxMs": 13016
+    },
+    "buzz_grade": {
+      "count": 40,
+      "p50Ms": 2009,
+      "p95Ms": 3719,
+      "maxMs": 4657
+    },
+    "session_delete": {
+      "count": 2,
+      "p50Ms": 174,
+      "p95Ms": 278,
+      "maxMs": 278
+    }
+  },
+  "failures": [
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    }
+  ],
+  "cleanup": {
+    "frozenStreamsClosedByServer": 0,
+    "observationMs": 3174,
+    "heartbeatsReceived": 0,
+    "newRoomCount": 50
+  },
+  "joinBatchMs": 2460,
+  "streamFailures": [
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError"
+  ],
+  "sseOpened": 0,
+  "mode": "polling fallback",
+  "totalScore": 1200,
+  "passed": false,
+  "error": "HTTP failures occurred\n\n5 !== 0\n",
+  "clientErrors": [
+    "fetch failed",
+    "fetch failed",
+    "fetch failed",
+    "fetch failed",
+    "fetch failed"
+  ],
+  "measurementNote": "In this run batchMs includes the post-burst authoritative verification request. mcVisibleMs measures actual MC display latency without this extra request."
+}
