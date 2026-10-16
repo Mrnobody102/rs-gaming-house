@@ -1,0 +1,190 @@
+{
+  "origin": "https://rs-gaming-house.onrender.com",
+  "at": "2026-10-16T02:18:53.812Z",
+  "players": 50,
+  "waves": [],
+  "requests": {
+    "bank_list": {
+      "count": 1,
+      "p50Ms": 401,
+      "p95Ms": 401,
+      "maxMs": 401
+    },
+    "session_create": {
+      "count": 1,
+      "p50Ms": 422,
+      "p95Ms": 422,
+      "maxMs": 422
+    },
+    "session_join": {
+      "count": 50,
+      "p50Ms": 1583,
+      "p95Ms": 2219,
+      "maxMs": 2253
+    },
+    "session_view": {
+      "count": 680,
+      "p50Ms": 2786,
+      "p95Ms": 7416,
+      "maxMs": 15004
+    },
+    "session_control": {
+      "count": 1,
+      "p50Ms": 5572,
+      "p95Ms": 5572,
+      "maxMs": 5572
+    },
+    "buzz_control": {
+      "count": 1,
+      "p50Ms": 2914,
+      "p95Ms": 2914,
+      "maxMs": 2914
+    },
+    "buzz_submit": {
+      "count": 50,
+      "p50Ms": 4354,
+      "p95Ms": 10305,
+      "maxMs": 10308
+    },
+    "session_delete": {
+      "count": 1,
+      "p50Ms": 622,
+      "p95Ms": 622,
+      "maxMs": 622
+    }
+  },
+  "failures": [
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "SyntaxError"
+    },
+    {
+      "command": "session_view",
+      "error": "TimeoutError"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "buzz_submit",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    },
+    {
+      "command": "session_view",
+      "error": "TypeError",
+      "code": "UND_ERR_CONNECT_TIMEOUT"
+    }
+  ],
+  "cleanup": {},
+  "joinBatchMs": 2265,
+  "streamFailures": [
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError",
+    "AbortError"
+  ],
+  "sseOpened": 0,
+  "mode": "polling fallback",
+  "passed": false,
+  "error": "fetch failed",
+  "cause": "UND_ERR_CONNECT_TIMEOUT",
+  "clientErrors": [
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "The operation was aborted due to timeout",
+    "fetch failed",
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "Unexpected token '<', \"<!DOCTYPE \"... is not valid JSON",
+    "fetch failed"
+  ]
+}

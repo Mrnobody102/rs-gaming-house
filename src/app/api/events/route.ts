@@ -52,9 +52,13 @@ export async function GET(request: NextRequest) {
           close();
         }
       };
-      unsubscribe = subscribeGame(id, (revision) =>
-        send(`event: change\ndata: ${revision}\n\n`),
-      );
+      unsubscribe = subscribeGame(id, (revision, deleted) => {
+        send(`event: change\ndata: ${revision}\n\n`);
+        if (deleted) {
+          send(`event: deleted\ndata: ${revision}\n\n`);
+          close();
+        }
+      });
       heartbeat = setInterval(() => send(": heartbeat\n\n"), 15000);
       request.signal.addEventListener("abort", close, { once: true });
       if (request.signal.aborted) close();

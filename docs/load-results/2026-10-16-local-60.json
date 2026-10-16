@@ -1,0 +1,357 @@
+{
+  "origin": "http://127.0.0.1:3210",
+  "at": "2026-10-16T02:13:08.894Z",
+  "players": 60,
+  "waves": [
+    {
+      "round": 1,
+      "attempt": 1,
+      "contenders": 60,
+      "winners": 1,
+      "batchMs": 646,
+      "mcVisibleMs": 652,
+      "openingDelivery": {
+        "count": 60,
+        "p50Ms": 248,
+        "p95Ms": 325,
+        "maxMs": 337
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 2,
+      "contenders": 59,
+      "winners": 1,
+      "batchMs": 523,
+      "mcVisibleMs": 503,
+      "openingDelivery": {
+        "count": 59,
+        "p50Ms": 204,
+        "p95Ms": 244,
+        "maxMs": 246
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 3,
+      "contenders": 58,
+      "winners": 1,
+      "batchMs": 452,
+      "mcVisibleMs": 446,
+      "openingDelivery": {
+        "count": 58,
+        "p50Ms": 255,
+        "p95Ms": 302,
+        "maxMs": 308
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 4,
+      "contenders": 57,
+      "winners": 1,
+      "batchMs": 441,
+      "mcVisibleMs": 462,
+      "openingDelivery": {
+        "count": 57,
+        "p50Ms": 199,
+        "p95Ms": 241,
+        "maxMs": 243
+      }
+    },
+    {
+      "round": 1,
+      "attempt": 5,
+      "contenders": 56,
+      "winners": 1,
+      "batchMs": 449,
+      "mcVisibleMs": 455,
+      "openingDelivery": {
+        "count": 56,
+        "p50Ms": 187,
+        "p95Ms": 230,
+        "maxMs": 238
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 1,
+      "contenders": 60,
+      "winners": 1,
+      "batchMs": 561,
+      "mcVisibleMs": 556,
+      "openingDelivery": {
+        "count": 60,
+        "p50Ms": 214,
+        "p95Ms": 265,
+        "maxMs": 269
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 2,
+      "contenders": 59,
+      "winners": 1,
+      "batchMs": 461,
+      "mcVisibleMs": 474,
+      "openingDelivery": {
+        "count": 59,
+        "p50Ms": 184,
+        "p95Ms": 234,
+        "maxMs": 235
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 3,
+      "contenders": 58,
+      "winners": 1,
+      "batchMs": 455,
+      "mcVisibleMs": 436,
+      "openingDelivery": {
+        "count": 58,
+        "p50Ms": 187,
+        "p95Ms": 231,
+        "maxMs": 237
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 4,
+      "contenders": 57,
+      "winners": 1,
+      "batchMs": 462,
+      "mcVisibleMs": 449,
+      "openingDelivery": {
+        "count": 57,
+        "p50Ms": 188,
+        "p95Ms": 225,
+        "maxMs": 228
+      }
+    },
+    {
+      "round": 2,
+      "attempt": 5,
+      "contenders": 56,
+      "winners": 1,
+      "batchMs": 451,
+      "mcVisibleMs": 459,
+      "openingDelivery": {
+        "count": 56,
+        "p50Ms": 210,
+        "p95Ms": 255,
+        "maxMs": 259
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 1,
+      "contenders": 60,
+      "winners": 1,
+      "batchMs": 499,
+      "mcVisibleMs": 502,
+      "openingDelivery": {
+        "count": 60,
+        "p50Ms": 201,
+        "p95Ms": 247,
+        "maxMs": 253
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 2,
+      "contenders": 59,
+      "winners": 1,
+      "batchMs": 443,
+      "mcVisibleMs": 436,
+      "openingDelivery": {
+        "count": 59,
+        "p50Ms": 185,
+        "p95Ms": 220,
+        "maxMs": 225
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 3,
+      "contenders": 58,
+      "winners": 1,
+      "batchMs": 456,
+      "mcVisibleMs": 444,
+      "openingDelivery": {
+        "count": 58,
+        "p50Ms": 188,
+        "p95Ms": 229,
+        "maxMs": 230
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 4,
+      "contenders": 57,
+      "winners": 1,
+      "batchMs": 426,
+      "mcVisibleMs": 426,
+      "openingDelivery": {
+        "count": 57,
+        "p50Ms": 187,
+        "p95Ms": 224,
+        "maxMs": 227
+      }
+    },
+    {
+      "round": 3,
+      "attempt": 5,
+      "contenders": 56,
+      "winners": 1,
+      "batchMs": 411,
+      "mcVisibleMs": 422,
+      "openingDelivery": {
+        "count": 56,
+        "p50Ms": 185,
+        "p95Ms": 225,
+        "maxMs": 225
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 1,
+      "contenders": 60,
+      "winners": 1,
+      "batchMs": 482,
+      "mcVisibleMs": 481,
+      "openingDelivery": {
+        "count": 60,
+        "p50Ms": 184,
+        "p95Ms": 234,
+        "maxMs": 239
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 2,
+      "contenders": 59,
+      "winners": 1,
+      "batchMs": 450,
+      "mcVisibleMs": 447,
+      "openingDelivery": {
+        "count": 59,
+        "p50Ms": 175,
+        "p95Ms": 215,
+        "maxMs": 216
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 3,
+      "contenders": 58,
+      "winners": 1,
+      "batchMs": 452,
+      "mcVisibleMs": 455,
+      "openingDelivery": {
+        "count": 58,
+        "p50Ms": 181,
+        "p95Ms": 223,
+        "maxMs": 225
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 4,
+      "contenders": 57,
+      "winners": 1,
+      "batchMs": 412,
+      "mcVisibleMs": 412,
+      "openingDelivery": {
+        "count": 57,
+        "p50Ms": 186,
+        "p95Ms": 225,
+        "maxMs": 229
+      }
+    },
+    {
+      "round": 4,
+      "attempt": 5,
+      "contenders": 56,
+      "winners": 1,
+      "batchMs": 428,
+      "mcVisibleMs": 404,
+      "openingDelivery": {
+        "count": 56,
+        "p50Ms": 175,
+        "p95Ms": 212,
+        "maxMs": 215
+      }
+    }
+  ],
+  "requests": {
+    "bank_list": {
+      "count": 1,
+      "p50Ms": 1405,
+      "p95Ms": 1405,
+      "maxMs": 1405
+    },
+    "session_create": {
+      "count": 2,
+      "p50Ms": 28,
+      "p95Ms": 37,
+      "maxMs": 37
+    },
+    "session_join": {
+      "count": 120,
+      "p50Ms": 183,
+      "p95Ms": 236,
+      "maxMs": 248
+    },
+    "session_view": {
+      "count": 4561,
+      "p50Ms": 122,
+      "p95Ms": 471,
+      "maxMs": 597
+    },
+    "session_control": {
+      "count": 9,
+      "p50Ms": 47,
+      "p95Ms": 116,
+      "maxMs": 116
+    },
+    "buzz_control": {
+      "count": 20,
+      "p50Ms": 102,
+      "p95Ms": 131,
+      "maxMs": 144
+    },
+    "buzz_submit": {
+      "count": 1160,
+      "p50Ms": 272,
+      "p95Ms": 458,
+      "maxMs": 640
+    },
+    "buzz_grade": {
+      "count": 40,
+      "p50Ms": 80,
+      "p95Ms": 121,
+      "maxMs": 147
+    },
+    "session_delete": {
+      "count": 2,
+      "p50Ms": 11,
+      "p95Ms": 16,
+      "maxMs": 16
+    }
+  },
+  "failures": [],
+  "cleanup": {
+    "frozenStreamsClosedByServer": 60,
+    "observationMs": 3034,
+    "heartbeatsReceived": 60,
+    "newRoomCount": 60
+  },
+  "joinBatchMs": 257,
+  "streamFailures": [],
+  "sseOpened": 60,
+  "mode": "SSE plus 6-second fallback polling",
+  "totalScore": 900,
+  "passed": true,
+  "clientErrors": []
+}

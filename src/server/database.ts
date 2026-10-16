@@ -67,7 +67,11 @@ export async function execute(
     typeof result.id === "string" &&
     typeof result.revision === "number"
   ) {
-    publishGameChange(result.id, result.revision);
+    publishGameChange(
+      result.id,
+      result.revision,
+      "deleted" in result && result.deleted === true,
+    );
   }
   return result;
 }

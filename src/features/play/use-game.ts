@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { command, CommandError } from "@/shared/client/api";
 import type { GameView } from "@/features/sessions/model";
 import { acceptSnapshot } from "./state";
+import { forgetPlayerRoom } from "@/shared/client/player-session";
 export function useGame(id: string, token: string) {
   const [game, setGame] = useState<GameView | null>(null),
     [error, setError] = useState(""),
@@ -23,6 +24,18 @@ export function useGame(id: string, token: string) {
     let pending = false;
     let dirty = false;
     let streaming = false;
+    let events: EventSource | undefined;
+    function deleted() {
+      if (abort.signal.aborted) return;
+      alive.current = false;
+      setOnline(false);
+      setError("Phòng không còn tồn tại. Nhập mã phòng khác để tham gia.");
+      setGame(null);
+      forgetPlayerRoom(id);
+      clearTimeout(timer);
+      events?.close();
+      abort.abort();
+    }
     async function refresh() {
       if (abort.signal.aborted) return;
       if (pending) {
@@ -45,9 +58,7 @@ export function useGame(id: string, token: string) {
           setOnline(false);
           setError((e as Error).message);
           if (e instanceof CommandError && e.code === "ROOM_NOT_FOUND") {
-            setGame(null);
-            events.close();
-            abort.abort();
+            deleted();
           }
         }
       } finally {
@@ -60,7 +71,7 @@ export function useGame(id: string, token: string) {
       }
     }
     refresh();
-    const events = new EventSource(
+    events = new EventSource(
       `/api/events/?${new URLSearchParams({ id, token })}`,
     );
     events.onopen = () => {
@@ -69,20 +80,23 @@ export function useGame(id: string, token: string) {
     events.addEventListener("change", () => {
       void refresh();
     });
+    events.addEventListener("deleted", deleted);
     events.onerror = () => {
       streaming = false;
       void refresh();
     };
     const wake = () => {
-      if (!document.hidden) refresh();
+      if (!abort.signal.aborted && !document.hidden) refresh();
     };
-    const offline = () => setOnline(false);
+    const offline = () => {
+      if (!abort.signal.aborted) setOnline(false);
+    };
     window.addEventListener("online", wake);
     window.addEventListener("offline", offline);
     document.addEventListener("visibilitychange", wake);
     return () => {
       alive.current = false;
-      events.close();
+      events?.close();
       abort.abort();
       clearTimeout(timer);
       window.removeEventListener("online", wake);

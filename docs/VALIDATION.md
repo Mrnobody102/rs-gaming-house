@@ -1,5 +1,9 @@
 # Kiểm tra
 
+## Dọn phòng và đo tải ngày 16/10/2026
+
+Kết quả mới: [báo cáo và dữ liệu đo](LOAD-CHECK-2026-10-16.md). Cục bộ PostgreSQL: 60 người, 60 SSE, 20/20 lượt BUZZ đúng và đóng đủ stream khi xóa phòng. Render: cùng 50 người vào lại phòng mới được, nhưng bài đo BUZZ có timeout và chưa đạt yêu cầu phản hồi nhanh. Không dùng kết quả cục bộ để khẳng định Render Free chịu tải ổn định. Trình chiếu độc lập và file HTML offline đã được kiểm tra làm phương án giơ tay, ghi điểm ngoài.
+
 ## Adapter PostgreSQL ngoài ngày 16/10/2026
 
 - `DATABASE_URL` chọn pool PostgreSQL 8 kết nối; health và command dùng cùng adapter, không import PGlite ở nhánh này. Không có URL vẫn chạy PGlite như trước.

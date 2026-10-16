@@ -20,14 +20,12 @@ test("removals respect their scope and deleting a live room returns players to e
     expect(response.ok(), await response.text()).toBe(true);
     return (await response.json()) as T;
   }
-  const [a, b, reserve] = workshopQuestions
-    .slice(1, 4)
-    .map((q, i) => ({
-      ...q,
-      id: crypto.randomUUID(),
-      title: `Deletion test ${i + 1}`,
-      hopeStar: false,
-    }));
+  const [a, b, reserve] = workshopQuestions.slice(1, 4).map((q, i) => ({
+    ...q,
+    id: crypto.randomUUID(),
+    title: `Deletion test ${i + 1}`,
+    hopeStar: false,
+  }));
   for (const q of [a, b, reserve]) await api("bank_save", { p_question: q });
   const set = crypto.randomUUID();
   await api("set_save", {
@@ -45,7 +43,7 @@ test("removals respect their scope and deleting a live room returns players to e
     reserveQuestionIds: [reserve.id],
     setId: set,
   });
-  const other = await api<{ id: string }>("session_create", {
+  const other = await api<{ id: string; code: string }>("session_create", {
     title: "Room to keep",
     capacity: 60,
     questionIds: [a.id, b.id],
@@ -86,9 +84,13 @@ test("removals respect their scope and deleting a live room returns players to e
   const playerContext = await browser.newContext({
     baseURL: "http://127.0.0.1:3201",
   });
+  const connection = new AbortController();
   try {
     const player = await playerContext.newPage();
     await player.goto(`/?code=${room.code}`);
+    await player.evaluate(() =>
+      localStorage.setItem("earthplay.room:OTHER", "keep-other-room"),
+    );
     await expect(
       player.getByRole("link", { name: "PIXEL HUNT — Trang chủ" }),
     ).toBeVisible();
@@ -96,6 +98,23 @@ test("removals respect their scope and deleting a live room returns players to e
     await player.getByLabel("Tên của bạn").fill("Player");
     await player.getByRole("button", { name: "Vào chơi", exact: true }).click();
     await expect(player.getByText("Chờ MC bắt đầu…")).toBeVisible();
+    const token = await player.evaluate(
+      (id) => localStorage.getItem(`earthplay.player:${id}`)!,
+      room.id,
+    );
+    // A raw subscriber never runs browser cleanup; deletion must close it server-side.
+    const stream = await fetch(
+      `http://127.0.0.1:3201/api/events/?${new URLSearchParams({ id: room.id, token })}`,
+      { signal: connection.signal },
+    );
+    expect(stream.ok).toBe(true);
+    let streamEnded = false;
+    const reader = stream.body!.getReader();
+    const finished = (async () => {
+      while (!(await reader.read()).done) {}
+      streamEnded = true;
+    })();
+    finished.catch(() => {});
     const denied = await playerContext.request.post("/api/command/", {
       data: { command: "session_delete", args: { p_id: room.id } },
     });
@@ -126,6 +145,29 @@ test("removals respect their scope and deleting a live room returns players to e
     await expect(
       player.getByRole("link", { name: "Về màn nhập mã" }),
     ).toBeVisible();
+    await expect.poll(() => streamEnded).toBe(true);
+    expect(
+      await player.evaluate(
+        ({ id, code }) => ({
+          player: localStorage.getItem(`earthplay.player:${id}`),
+          room: localStorage.getItem(`earthplay.room:${code}`),
+          temporary: sessionStorage.getItem(`earthplay.player:${id}`),
+          other: localStorage.getItem("earthplay.room:OTHER"),
+          name: localStorage.getItem("earthplay.name"),
+        }),
+        room,
+      ),
+    ).toEqual({
+      player: null,
+      room: null,
+      temporary: null,
+      other: "keep-other-room",
+      name: "Player",
+    });
+    await player.getByRole("link", { name: "Về màn nhập mã" }).click();
+    await player.getByLabel("Mã phòng").fill(other.code);
+    await player.getByRole("button", { name: "Vào chơi", exact: true }).click();
+    await expect(player.getByText("Chờ MC bắt đầu…")).toBeVisible();
     const missing = await playerContext.request.post("/api/command/", {
       data: { command: "session_view", args: { p_id: room.id } },
     });
@@ -154,6 +196,7 @@ test("removals respect their scope and deleting a live room returns players to e
       page.getByRole("button", { name: "Xóa phòng Room to keep", exact: true }),
     ).toHaveCount(0);
   } finally {
+    connection.abort();
     await playerContext.close();
   }
   // A bank deletion removes references from reusable sets, preserving remaining questions.

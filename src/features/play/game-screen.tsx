@@ -128,9 +128,11 @@ function LiveGame({
         .catch(() => setBase(location.origin));
   }, [joinBase]);
   useEffect(() => {
+    if (!g?.deadline || g.phase !== "question") return;
+    setNow(Date.now());
     const tick = setInterval(() => setNow(Date.now()), 200);
     return () => clearInterval(tick);
-  }, []);
+  }, [g?.deadline, g?.phase]);
   async function run(name: string, args: object = {}) {
     if (actionPending.current) return;
     actionPending.current = true;

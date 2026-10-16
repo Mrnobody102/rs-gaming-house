@@ -21,3 +21,32 @@ export function savePlayerSession(key: string, value: string) {
     sessionStorage.setItem(key, value);
   } catch {}
 }
+
+export function forgetPlayerRoom(id: string) {
+  const key = `earthplay.player:${id}`,
+    token = readPlayerSession(key);
+  const keys = new Set([key]);
+  const collect = (name: string, value: string | null) => {
+    if (token && name.startsWith("earthplay.room:") && value === token)
+      keys.add(name);
+  };
+  for (const [name, value] of memory) collect(name, value);
+  for (const kind of ["localStorage", "sessionStorage"] as const) {
+    try {
+      const storage = window[kind];
+      for (let i = 0; i < storage.length; i++) {
+        const name = storage.key(i);
+        if (name) collect(name, storage.getItem(name));
+      }
+    } catch {}
+  }
+  for (const name of keys) {
+    memory.delete(name);
+    try {
+      localStorage.removeItem(name);
+    } catch {}
+    try {
+      sessionStorage.removeItem(name);
+    } catch {}
+  }
+}
