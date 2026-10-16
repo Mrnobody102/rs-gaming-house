@@ -1,11 +1,11 @@
-import type { PGlite } from "@electric-sql/pglite";
+import type { SqlDatabase } from "./database-types";
 import { workshopQuestions, workshopSet } from "@/content/workshop";
 const retiredSampleIds = [
   ...Array.from({ length: 5 }, (_, i) => 1101 + i),
   ...Array.from({ length: 18 }, (_, i) => 1201 + i),
 ].map((number) => `7b0c6f11-5dd8-4d44-8ba7-b03a2bea${number}`);
 
-export async function seedWorkshop(db: PGlite, owner: string) {
+export async function seedWorkshop(db: SqlDatabase, owner: string) {
   await db.transaction(async (tx) => {
     const version = "workshop_20261016_v2";
     if (

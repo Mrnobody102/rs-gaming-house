@@ -6,7 +6,7 @@ services:
     region: singapore
     plan: 1c-2g
     numInstances: 1
-    buildCommand: npm ci && npm run build
+    buildCommand: npm ci --include=dev && npm run build
     startCommand: node .next/standalone/server.js
     healthCheckPath: /api/health/
     autoDeployTrigger: "off"

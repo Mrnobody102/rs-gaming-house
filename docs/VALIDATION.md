@@ -1,5 +1,26 @@
 # Kiểm tra
 
+## Adapter PostgreSQL ngoài ngày 16/10/2026
+
+- `DATABASE_URL` chọn pool PostgreSQL 8 kết nối; health và command dùng cùng adapter, không import PGlite ở nhánh này. Không có URL vẫn chạy PGlite như trước.
+- TypeScript và build standalone pass; 45 test cũ pass khi chạy tuần tự.
+- Kiểm tra trên PostgreSQL 16 thật với tài khoản không phải superuser nhưng có CREATEROLE: migrations/seed, 60 transaction BUZZ đồng thời cùng một người thắng, chỉ MC được chấm, chấm lặp không cộng thêm, rollback và claims không rò sang request khác đều pass (`tests/postgres.test.ts`, cần `TEST_DATABASE_URL` riêng để chạy).
+- Hai test E2E qua bản standalone + PostgreSQL thật pass: SSE/pointer-down/hiển thị người thắng trên Host, và 60 người đọc/BUZZ qua HTTP. Toàn đợt đọc 652 ms, toàn đợt BUZZ 1410 ms trên máy kiểm tra; không phải độ trễ render hoặc phép đo Render.
+- Lần E2E đầu không kết nối được database do WSL tắt khi không có terminal giữ hoạt động; đã xác nhận ECONNREFUSED và chạy lại sau khi giữ WSL hoạt động. Không thay test để bỏ qua lỗi.
+- Chưa có kết quả đo RAM, 60 SSE, idle 20 phút hoặc tải trên Render thật. Hướng dẫn deployment: [RENDER-POSTGRES-FREE.md](RENDER-POSTGRES-FREE.md).
+
+## Rà soát workshop Render ngày 16/10/2026
+
+- Production build standalone thành công với Node 24.22.0, gồm TypeScript và đóng gói assets/migrations.
+- `vitest run --maxWorkers=1`: 8 file, 45/45 test pass. Lần chạy mặc định nhiều worker gặp lỗi hết bộ nhớ trên máy kiểm tra; kết quả pass này là chạy tuần tự.
+- Chạy test HTTP `60 concurrent players` với `--repeat-each=20` trên production local: **19 pass, 1 fail**. Lượt đầu timeout 10 giây ở `bank_save` khi chuẩn bị phòng trên database mới, trước đợt BUZZ; 19 lượt sau mỗi lượt 60 người đều cùng nhận một người thắng và chỉ một người có điểm, không có request lỗi trong các lượt pass.
+- 19 đợt BUZZ hoàn tất toàn bộ 60 phản hồi trong khoảng **1.211–1.826 ms** (tức **1,211–1,826 giây**). Đây là thời gian hoàn tất cả đợt, không phải độ trễ hiện tên trên Host/Presentation, không phải p95 và không so trực tiếp được với các lần đo trên máy khác.
+- **Chưa đạt bằng chứng 20/20 lượt liên tiếp**, chưa mở 60 kênh SSE cùng tải nền, chưa đo thời gian hiển thị dưới 1 giây và chưa thử idle 20 phút trên Render. Không dùng kết quả này để tick các mục tương ứng của checklist deployment.
+
+Hướng dẫn: [Render Free](RENDER-FREE.md), [so sánh hosting cho workshop](HOSTING-WORKSHOP.md).
+
+## Các kiểm tra trong repo
+
 `npm test`: luật SQL, phân quyền, snapshot, chấm điểm một lần, 60 người gửi bài, migration cũ; ba game EO, 60 người BUZZ đồng thời chỉ một người thắng, gợi ý/đáp án được che trước reveal, điểm cá nhân, từ chối bài giả, lưu tọa độ MC, khoảng cách WGS84 và cookie admin.
 
 `npm run build`: build standalone, kiểm tra TypeScript và đóng gói migration/media tĩnh.

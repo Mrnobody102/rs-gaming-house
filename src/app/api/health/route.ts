@@ -1,9 +1,9 @@
-import { localDatabase } from "@/server/local-database";
+import { applicationDatabase } from "@/server/database-provider";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export async function GET() {
   try {
-    const db = await localDatabase();
+    const db = await applicationDatabase();
     const { rows } = await db.query<{
       window_ready: boolean;
       submit_ready: boolean;
@@ -23,7 +23,11 @@ export async function GET() {
       { ok: ready },
       { status: ready ? 200 : 503, headers: { "Cache-Control": "no-store" } },
     );
-  } catch {
+  } catch (error) {
+    console.error(
+      "[health] Database unavailable",
+      (error as { code?: string }).code || "UNKNOWN",
+    );
     return Response.json(
       { ok: false },
       { status: 503, headers: { "Cache-Control": "no-store" } },

@@ -41,8 +41,9 @@ export async function execute(
     throw Object.assign(new Error("Nhập mật mã để vào quản trị."), {
       code: "42501",
     });
-  const { localDatabase, DEMO_ADMIN } = await import("./local-database");
-  const db = await localDatabase();
+  const { applicationDatabase, DEMO_ADMIN } =
+    await import("./database-provider");
+  const db = await applicationDatabase();
   const result = await db.transaction(async (tx) => {
     await tx.query("select set_config('request.jwt.claim.sub',$1,true)", [
       admin ? DEMO_ADMIN : "",

@@ -1,5 +1,7 @@
 # Đưa EARTH//PLAY lên Render
 
+Nếu dùng **Render Free cho workshop ngắn**, xem [hướng dẫn Free và checklist 50–60 người](RENDER-FREE.md). Các bước bên dưới dành cho cấu hình trả phí có disk.
+
 Repo có `render.yaml` để tạo **một Web Service Node + một persistent disk**. Cấu hình này dùng dịch vụ trả phí, region Singapore và gói `1c-2g` (1 CPU / 2 GB RAM). Đây là cấu hình khởi điểm để thử, chưa phải kết quả đo tải trên Render. Kiểm tra chi phí Render hiển thị trước khi tạo.
 
 ## Tạo bằng Blueprint
