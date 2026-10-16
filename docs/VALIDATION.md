@@ -51,6 +51,8 @@ Rà UI quản trị ở 360/768/1440 px: đường vào Bộ câu hỏi, các tr
 
 Gợi ý được kiểm tra với ba ô mặc định, trộn chữ/ảnh, upload ảnh, sửa lại câu đã lưu, và ảnh chỉ xuất hiện sau khi MC mở đúng gợi ý. Có thêm kiểm tra HTTP 60 người đọc/BUZZ đồng thời trên server production cục bộ; kết quả và giới hạn ở [đánh giá Vercel](VERCEL.md). Đây chưa phải kiểm tra tải Vercel hay 60 thiết bị thật.
 
+Gợi ý chữ dùng cỡ 24–40 px, ảnh mở lớn theo chiều cao màn hình; vùng câu hỏi tự cuộn tới gợi ý vừa mở. Ảnh nét dần được kiểm tra ở màn MC, điện thoại và trình chiếu offline: chưa mở thì chưa có ảnh gợi ý trên màn chơi; mở ảnh mới có chuyển mờ, xem lại ảnh cũ giữ zoom và không trừ thêm điểm. Có thử tải ảnh lỗi rồi khôi phục. Cập nhật bộ workshop giữ các trường tác giả tự sửa và nội dung phòng đã bắt đầu, đồng thời sửa bản mặc định trong kho/phòng chờ. Adapter PostgreSQL được thử bằng database tạm cục bộ.
+
 QR được kiểm tra bằng ảnh PNG giải mã trong trình duyệt; camera thật trên điện thoại chưa được kiểm tra vật lý. Mã người chơi được kiểm tra khi `randomUUID` không khả dụng. Bộ mẫu gồm 23 câu với ID duy nhất, đủ sáu game và ba mức khó; lựa chọn địa chỉ LAN tránh adapter VMware/WSL.
 
 Giới hạn: chưa kiểm tra Cloudinary bằng tài khoản thật, chưa đo tải trên hosting hoặc mạng Wi-Fi của sự kiện. Nội dung EO thật và độ chính xác georeference cần được tác giả kiểm chứng trước workshop.

@@ -12,14 +12,14 @@ const globalDatabase = globalThis as typeof globalThis & {
 export function localDatabase() {
   if (
     globalDatabase.earthplayDb &&
-    globalDatabase.earthplayVersion !== "017-game-flow"
+    globalDatabase.earthplayVersion !== "017-workshop-hints-v4"
   )
     globalDatabase.earthplayDb = globalDatabase.earthplayDb.then(async (db) => {
       await initializeDatabase(db);
       await seedWorkshop(db, DEMO_ADMIN);
       return db;
     });
-  globalDatabase.earthplayVersion = "017-game-flow";
+  globalDatabase.earthplayVersion = "017-workshop-hints-v4";
   return (globalDatabase.earthplayDb ??= (async () => {
     const dir = path.resolve(
       process.env.APP_DATA_DIR ||

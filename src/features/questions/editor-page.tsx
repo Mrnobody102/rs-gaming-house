@@ -217,6 +217,10 @@ export function EditorPage({
                   tags: q.tags,
                   explanation: q.explanation,
                   hints: q.hints || [],
+                  hintMode:
+                    next.kind === "place" || next.kind === "riddle"
+                      ? q.hintMode
+                      : undefined,
                   difficulty: difficultyOf(q),
                   points: q.points,
                   hopeStar: q.hopeStar,
@@ -370,6 +374,20 @@ export function EditorPage({
               </label>
             ) : (
               <EarthFields question={q} onChange={setQ} />
+            )}
+            {(q.kind === "place" || q.kind === "riddle") && (
+              <label className="checkbox-row">
+                <input
+                  type="checkbox"
+                  checked={q.hintMode === "progressive"}
+                  onChange={(e) =>
+                    patch({
+                      hintMode: e.target.checked ? "progressive" : "list",
+                    })
+                  }
+                />
+                Mở ảnh nét dần trong khung chính
+              </label>
             )}
             <HintFields
               hints={q.hints || []}

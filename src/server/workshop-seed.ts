@@ -6,6 +6,11 @@ const retiredSampleIds = [
 ].map((number) => `7b0c6f11-5dd8-4d44-8ba7-b03a2bea${number}`);
 
 export async function seedWorkshop(db: SqlDatabase, owner: string) {
+  await seedInitialWorkshop(db, owner);
+  await refreshWorkshop(db, owner);
+}
+
+async function seedInitialWorkshop(db: SqlDatabase, owner: string) {
   await db.transaction(async (tx) => {
     const version = "workshop_20261016_v2";
     if (
@@ -64,6 +69,72 @@ export async function seedWorkshop(db: SqlDatabase, owner: string) {
         workshopSet.reserveQuestionIds,
       ],
     );
+    await tx.query("insert into public.local_migrations values($1)", [version]);
+  });
+}
+
+async function refreshWorkshop(db: SqlDatabase, owner: string) {
+  await db.transaction(async (tx) => {
+    const version = "workshop_20261016_v4";
+    if (
+      (
+        await tx.query(
+          "select name from public.local_migrations where name=$1",
+          [version],
+        )
+      ).rows.length
+    )
+      return;
+    const mangrove = workshopQuestions[0],
+      stadium = workshopQuestions.find((q) => q.tags.includes("Slide 5"))!;
+    if (!("solution" in mangrove))
+      throw new Error("Workshop mangrove question needs a solution.");
+    const updates = [
+      {
+        id: mangrove.id,
+        // Undo only our temporary local draft, as requested by the author.
+        match: {
+          title: "Rừng ngập mặn Cần Giờ nằm ở ô nào?",
+          solution: "MC xác nhận ô đúng.",
+        },
+        patch: { title: mangrove.title, solution: mangrove.solution },
+      },
+      {
+        id: stadium.id,
+        match: { image: stadium.image, hints: stadium.hints },
+        patch: { hintMode: "progressive" },
+      },
+    ];
+    for (const update of updates) {
+      const params = [
+        owner,
+        update.id,
+        JSON.stringify(update.match),
+        JSON.stringify(update.patch),
+        "hintMode" in update.patch,
+      ];
+      await tx.query(
+        `update public.questions set body=body||$4::jsonb
+        where owner_id=$1 and id=$2 and not archived and body @> $3::jsonb
+        and (not $5::boolean or (not(body ? 'hintMode') and body->'hints'=($3::jsonb)->'hints'))`,
+        params,
+      );
+      // Refresh only waiting rooms. Started games keep their frozen content/score.
+      await tx.query(
+        `update public.session_rounds r set question=question||$4::jsonb
+        from public.game_sessions s where s.id=r.session_id and s.owner_id=$1 and s.phase='lobby'
+        and r.question->>'id'=$2::text and r.question @> $3::jsonb
+        and (not $5::boolean or (not(r.question ? 'hintMode') and r.question->'hints'=($3::jsonb)->'hints'))`,
+        params,
+      );
+      await tx.query(
+        `update public.session_reserves r set question=question||$4::jsonb
+        from public.game_sessions s where s.id=r.session_id and s.owner_id=$1 and s.phase='lobby'
+        and r.question->>'id'=$2::text and r.question @> $3::jsonb
+        and (not $5::boolean or (not(r.question ? 'hintMode') and r.question->'hints'=($3::jsonb)->'hints'))`,
+        params,
+      );
+    }
     await tx.query("insert into public.local_migrations values($1)", [version]);
   });
 }

@@ -68,6 +68,8 @@ Form chính gồm ảnh, câu hỏi, đáp án, gợi ý và **Giải thích / t
 
 Gợi ý mặc định có **3 ô**, mỗi ô chọn **Chữ / Ảnh**. Ô trống không được lưu. Ảnh có thể tải lên hoặc dán URL HTTPS; MC mở từng gợi ý theo thứ tự. Bấm ảnh gợi ý trên màn chơi để mở ảnh đầy đủ.
 
+Với câu đoán ảnh có nhiều mức phân giải, bật **Mở ảnh nét dần trong khung chính**. Mỗi gợi ý ảnh mới thay ảnh đang xem, có chuyển mờ nhẹ; các nút **Ảnh ban đầu / Gợi ý 1 / Gợi ý 2** cho phép đối chiếu lại mà không trừ thêm điểm. Câu sân Mỹ Đình đã bật sẵn. Cách hiển thị này dùng được cả khi chơi BUZZ, chỉ trình chiếu và trong HTML dự phòng.
+
 **Bộ đề** có thể lưu nháp rỗng, chọn câu có sẵn hoặc **Soạn câu mới** ngay trong bộ, sắp thứ tự và đánh dấu các câu cho phép ngôi sao. Từ danh sách bộ đề bấm **Tạo phòng** để dùng lại nội dung đã chuẩn bị. Tại phòng chờ, MC có thể **Xem danh sách câu hỏi → Chỉnh sửa phiên** để đổi câu, thứ tự và ngôi sao riêng cho phòng đó. Bắt đầu chơi sẽ khóa chỉnh sửa nội dung; sửa một phòng không sửa bộ gốc. Các phòng đã tạo trước khi đổi thang điểm vẫn giữ điểm trong snapshot cũ.
 
 Mặc định ảnh tải lên được lưu trong `.local/media`. Có thể dán URL HTTPS, hoặc dùng Cloudinary để ảnh tồn tại độc lập với hosting:

@@ -9,6 +9,7 @@ import type { QuestionSet } from "@/features/questions/sets-page";
 import type { GameView, SessionPlan } from "@/features/sessions/model";
 import { EarthStage, ImageViewer } from "@/features/play/earth-games";
 import { GameHints } from "@/features/play/game-hints";
+import { usesProgressiveHints } from "@/features/games/hints";
 import { embedImages, presentationHtml } from "./offline";
 
 export function PresentationPage({
@@ -179,7 +180,10 @@ export function PresentationPage({
         </div>
       </header>
       <ErrorMessage message={error} />
-      <main className={`question-stage kind-${q.kind}`}>
+      <main
+        key={`${q.id}:${reveal}`}
+        className={`question-stage kind-${q.kind}`}
+      >
         <div className="question-heading">
           <p className="question-chip">
             {Math.max(0, q.points - opened * (penalty ? 50 : 0))} điểm
@@ -210,13 +214,19 @@ export function PresentationPage({
           <ImageViewer key={q.id} src={q.image} />
         ) : (
           <EarthStage
-            question={q}
-            roundId={`${q.id}:${reveal}`}
+            question={{ ...q, hints: q.hints.slice(0, opened) }}
+            roundId={q.id}
             reveal={reveal}
             interactive={false}
           />
         )}
-        {opened > 0 && <GameHints hints={q.hints.slice(0, opened)} />}
+        {opened > 0 && (
+          <GameHints
+            hints={q.hints.slice(0, opened)}
+            hideImages={usesProgressiveHints(q)}
+            follow={!reveal}
+          />
+        )}
         {reveal && q.explanation && (
           <p className="answer-explanation">{q.explanation}</p>
         )}

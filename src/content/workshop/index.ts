@@ -61,17 +61,20 @@ export const workshopQuestions: Question[] = [
     "Tỉnh này giáp Campuchia.",
     "Nổi tiếng với muối tôm.",
   ]),
-  question(
-    5,
-    "medium",
-    "Đây là sân vận động nào?",
-    "image-5",
-    "Sân vận động Quốc gia Mỹ Đình, Hà Nội.",
-    [
-      { type: "image", image: asset("image-6") },
-      { type: "image", image: asset("image-7") },
-    ],
-  ),
+  {
+    ...question(
+      5,
+      "medium",
+      "Đây là sân vận động nào?",
+      "image-5",
+      "Sân vận động Quốc gia Mỹ Đình, Hà Nội.",
+      [
+        { type: "image", image: asset("image-6") },
+        { type: "image", image: asset("image-7") },
+      ],
+    ),
+    hintMode: "progressive",
+  },
   question(
     8,
     "medium",

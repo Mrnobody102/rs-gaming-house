@@ -132,3 +132,71 @@ it("keeps optional deductions off and hides answer images until reveal", async (
   g = await rpc("session_control", [s.id, "reveal", g.roundId]);
   expect(g.question.answerImage).toBe(q.answerImage);
 });
+
+it("refreshes old workshop fields and waiting rooms without changing authored text or started games", async () => {
+  const mangrove = workshopQuestions[0],
+    stadium = workshopQuestions.find((q) => q.tags.includes("Slide 5"))!;
+  const oldMangrove = {
+    ...mangrove,
+    title: "Rừng ngập mặn Cần Giờ nằm ở ô nào?",
+    solution: "MC xác nhận ô đúng.",
+  };
+  const oldStadium = { ...stadium, hintMode: undefined };
+  for (const q of [oldMangrove, oldStadium])
+    await rpc("bank_save", [JSON.stringify(q)]);
+  const ids = [mangrove.id, stadium.id];
+  const waiting = await rpc<{ id: string }>("session_create", [
+    "Waiting upgrade",
+    ids,
+    60,
+  ]);
+  const started = await rpc<{ id: string }>("session_create", [
+    "Started upgrade",
+    ids,
+    60,
+  ]);
+  let g = await rpc("session_view", [started.id]);
+  await rpc("session_control", [started.id, "start", g.roundId]);
+  await rpc("bank_save", [
+    JSON.stringify({ ...oldMangrove, title: "My revised wording" }),
+  ]);
+  await rpc("bank_save", [
+    JSON.stringify({
+      ...oldStadium,
+      hints: [...oldStadium.hints, "My additional hint"],
+    }),
+  ]);
+  await db.query(
+    "delete from public.local_migrations where name='workshop_20261016_v4'",
+  );
+  await seedWorkshop(db, DEMO_ADMIN);
+  const bank =
+    await rpc<{ id: string; title: string; hintMode?: string }[]>("bank_list");
+  expect(bank.find((q) => q.id === mangrove.id)?.title).toBe(
+    "My revised wording",
+  );
+  expect(bank.find((q) => q.id === stadium.id)?.hintMode).toBeUndefined();
+  expect((await rpc("session_view", [waiting.id])).question.title).toBe(
+    mangrove.title,
+  );
+  expect((await rpc("session_view", [started.id])).question.title).toBe(
+    oldMangrove.title,
+  );
+  const waitingPlan = await rpc<{ questions: { hintMode?: string }[] }>(
+    "session_plan",
+    [waiting.id],
+  );
+  expect(waitingPlan.questions[1].hintMode).toBe("progressive");
+  const startedPlan = await rpc<{ questions: { hintMode?: string }[] }>(
+    "session_plan",
+    [started.id],
+  );
+  expect(startedPlan.questions[1].hintMode).toBeUndefined();
+  await rpc("bank_save", [JSON.stringify({ ...stadium, hintMode: "list" })]);
+  await seedWorkshop(db, DEMO_ADMIN);
+  expect(
+    (await rpc<{ id: string; hintMode?: string }[]>("bank_list")).find(
+      (q) => q.id === stadium.id,
+    )?.hintMode,
+  ).toBe("list");
+});

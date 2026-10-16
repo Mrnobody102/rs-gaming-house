@@ -15,6 +15,17 @@ export const hintSchema = z.union([
   z.discriminatedUnion("type", [textHint, imageHint]),
 ]);
 export type Hint = z.infer<typeof hintSchema>;
+export function usesProgressiveHints(q: {
+  kind: string;
+  image: string;
+  hintMode?: string;
+}) {
+  return (
+    !!q.image &&
+    q.hintMode === "progressive" &&
+    (q.kind === "place" || q.kind === "riddle")
+  );
+}
 export function readHint(hint: Hint) {
   return typeof hint === "string"
     ? { type: "text" as const, text: hint }

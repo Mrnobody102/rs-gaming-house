@@ -47,6 +47,18 @@ test("the prepared workshop presents without players and exports a working offli
   await page.getByRole("checkbox", { name: "Mỗi gợi ý −50 điểm" }).check();
   await page.getByRole("button", { name: "Mở gợi ý 1 (−50)" }).click();
   await expect(page.locator(".question-chip")).toHaveText("150 điểm");
+  await expect
+    .poll(async () => {
+      const hint = await page.locator(".game-hints li").last().boundingBox();
+      const stage = await page.locator(".question-stage").boundingBox();
+      return hint!.y + hint!.height <= stage!.y + stage!.height + 1;
+    })
+    .toBe(true);
+  expect(
+    await page
+      .locator(".game-hints")
+      .evaluate((element) => parseFloat(getComputedStyle(element).fontSize)),
+  ).toBeGreaterThanOrEqual(30);
   await page.getByRole("button", { name: "Xem đáp án", exact: true }).click();
   await expect(page.locator(".place-solution")).toContainText("Lý Sơn");
   await page.getByLabel("Chọn câu hỏi").selectOption("7");
@@ -54,6 +66,22 @@ test("the prepared workshop presents without players and exports a working offli
   await page.getByRole("button", { name: "Xem đáp án", exact: true }).click();
   await expect(page.locator(".place-solution")).toHaveText("Ô 16.");
   await expect(page.locator(".answer-explanation")).toContainText("hiện tại");
+  await page.getByLabel("Chọn câu hỏi").selectOption("4");
+  const stageImage = page.locator(".image-viewer svg > image").last();
+  const original = await stageImage.getAttribute("href");
+  await page
+    .getByRole("button", { name: "Mở gợi ý 1 (−50)", exact: true })
+    .click();
+  await expect(stageImage).not.toHaveAttribute("href", original!);
+  await page.getByRole("button", { name: "Ảnh ban đầu", exact: true }).click();
+  await expect(stageImage).toHaveAttribute("href", original!);
+  await page
+    .getByRole("button", { name: "Mở gợi ý 2 (−50)", exact: true })
+    .click();
+  await expect(
+    page.getByRole("button", { name: "Gợi ý 2", exact: true }),
+  ).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator(".question-chip")).toHaveText("200 điểm");
   const offlineContext = await browser.newContext({ offline: true });
   try {
     const offline = await offlineContext.newPage();
@@ -66,6 +94,30 @@ test("the prepared workshop presents without players and exports a working offli
           (img: HTMLImageElement) => img.complete && img.naturalWidth > 0,
         ),
     ).toBe(true);
+    await offline.locator("#select").selectOption("4");
+    await expect(offline.locator("#image")).toHaveAttribute(
+      "src",
+      /data:image/,
+    );
+    const initialImage = await offline.locator("#image").getAttribute("src");
+    await offline.locator("#penalty").check();
+    await offline.locator("#hint").click();
+    await expect(offline.locator("#image")).not.toHaveAttribute(
+      "src",
+      initialImage!,
+    );
+    await offline
+      .getByRole("button", { name: "Ảnh ban đầu", exact: true })
+      .click();
+    await expect(offline.locator("#image")).toHaveAttribute(
+      "src",
+      initialImage!,
+    );
+    await offline.locator("#hint").click();
+    await expect(
+      offline.getByRole("button", { name: "Gợi ý 2", exact: true }),
+    ).toHaveAttribute("aria-pressed", "true");
+    await expect(offline.locator("#points")).toHaveText("200 điểm");
     await offline.locator("#select").selectOption("7");
     await offline.locator("#reveal").click();
     await expect(offline.locator("#solution")).toHaveText("Ô 16.");

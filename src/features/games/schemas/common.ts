@@ -24,6 +24,7 @@ export const common = {
   explanation: z.string().trim().max(2000).default(""),
   tags: z.array(z.string().trim().min(1).max(30)).max(8).default([]),
   hints: z.array(hintSchema).max(8).default([]),
+  hintMode: z.enum(["list", "progressive"]).optional(),
   difficulty: z.enum(["easy", "medium", "hard"]).default("medium"),
   hopeStar: z.boolean().optional(),
 };

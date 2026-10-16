@@ -24,6 +24,7 @@ import { useGame } from "./use-game";
 import { Puzzle } from "./puzzle";
 import { EarthStage } from "./earth-games";
 import { usesBuzz } from "@/features/games/catalog";
+import { usesProgressiveHints } from "@/features/games/hints";
 import { readPlayerSession } from "@/shared/client/player-session";
 import { Ranking } from "./ranking";
 import { SessionContents } from "@/features/sessions/session-contents";
@@ -424,7 +425,10 @@ function LiveGame({
           }
         />
       ) : (
-        <main className={`question-stage kind-${q.kind}`}>
+        <main
+          key={`${g.roundId}:${reveal}`}
+          className={`question-stage kind-${q.kind}`}
+        >
           <div className="question-heading">
             <p className="question-chip">
               {kindLabels[q.kind].toLocaleUpperCase("vi")}
@@ -563,7 +567,13 @@ function LiveGame({
           {!canAnswer &&
             (!canControl || (projector && !showControls)) &&
             buzzPanel}
-          {q.hints?.length > 0 && <GameHints hints={q.hints} />}
+          {q.hints?.length > 0 && (
+            <GameHints
+              hints={q.hints}
+              hideImages={usesProgressiveHints(q)}
+              follow={!reveal}
+            />
+          )}
           {canAnswer && g.myAnswer && (!eo || reveal) && (
             <p
               className={`feedback ${reveal ? (g.myAnswer.correct ? "correct" : "incorrect") : "submitted"}`}
